@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign In — ShopMate AI Luxury Retail</title>
+  
+  <!-- Google Fonts: Poppins & Playfair Display -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,400&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- FontAwesome 6 Pro Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  
+  <style>
+    :root {
+      --bg-page: #f8fafc;
+      --bg-card: #ffffff;
+      --accent-primary: #4f46e5;
+      --accent-primary-hover: #4338ca;
+      --accent-cyan: #0891b2;
+      --accent-emerald: #059669;
+      --text-main: #0f172a;
+      --text-secondary: #475569;
+      --text-muted: #64748b;
+      --border-light: #e2e8f0;
+      --border-hover: #cbd5e1;
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 18px;
+      --shadow-subtle: 0 1px 3px rgba(0, 0, 0, 0.05), 0 1px 2px rgba(0, 0, 0, 0.03);
+      --shadow-card: 0 20px 45px -10px rgba(15, 23, 42, 0.08), 0 10px 20px -5px rgba(15, 23, 42, 0.04);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background-color: var(--bg-page);
+      background-image: 
+        radial-gradient(at 0% 0%, rgba(79, 70, 229, 0.05) 0px, transparent 50%),
+        radial-gradient(at 100% 100%, rgba(8, 145, 178, 0.05) 0px, transparent 50%),
+        radial-gradient(at 50% 50%, rgba(241, 245, 249, 0.8) 0px, transparent 100%);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    .login-container {
+      width: 100%;
+      max-width: 440px;
+      position: relative;
+      z-index: 10;
+    }
+
+    .brand-header {
+      text-align: center;
+      margin-bottom: 28px;
+    }
+
+    .brand-logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 32px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      color: #0f172a;
+      display: inline-flex;
+      align-items: center;
+      gap: 2px;
+      text-decoration: none;
+    }
+
+    .brand-logo span {
+      color: var(--accent-primary);
+    }
+
+    .brand-tagline {
+      font-size: 11.5px;
+      font-weight: 600;
+      color: var(--text-muted);
+      margin-top: 6px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .login-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-lg);
+      padding: 34px 30px;
+      box-shadow: var(--shadow-card);
+    }
+
+    .card-title {
+      font-size: 18px;
+      font-weight: 600;
+      color: #0f172a;
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .card-title i {
+      color: var(--accent-primary);
+    }
+
+    .card-sub {
+      font-size: 13px;
+      color: var(--text-secondary);
+      margin-bottom: 22px;
+      line-height: 1.5;
+    }
+
+    /* Role Quick Login Chips */
+    .role-section-label {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--text-muted);
+      margin-bottom: 10px;
+    }
+
+    .role-chips-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin-bottom: 20px;
+    }
+
+    .role-chip-btn {
+      background: #f8fafc;
+      border: 1.5px solid var(--border-light);
+      border-radius: var(--radius-md);
+      padding: 10px 6px;
+      color: var(--text-secondary);
+      font-size: 11.5px;
+      font-weight: 500;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3px;
+      transition: all 0.2s ease;
+      text-align: center;
+    }
+
+    .role-chip-btn i {
+      font-size: 14px;
+      color: var(--text-muted);
+      margin-bottom: 2px;
+      transition: color 0.2s ease;
+    }
+
+    .role-chip-btn:hover {
+      background: #f1f5f9;
+      border-color: var(--border-hover);
+      color: #0f172a;
+      transform: translateY(-1px);
+    }
+
+    .role-chip-btn.active {
+      background: #eef2ff;
+      border-color: var(--accent-primary);
+      color: var(--accent-primary);
+      font-weight: 600;
+      box-shadow: 0 0 0 1px var(--accent-primary);
+    }
+
+    .role-chip-btn.active i {
+      color: var(--accent-primary);
+    }
+
+    .divider {
+      display: flex;
+      align-items: center;
+      text-align: center;
+      margin: 18px 0;
+      color: #94a3b8;
+      font-size: 11.5px;
+      font-weight: 500;
+    }
+
+    .divider::before, .divider::after {
+      content: '';
+      flex: 1;
+      border-bottom: 1px solid var(--border-light);
+    }
+
+    .divider:not(:empty)::before { margin-right: .75em; }
+    .divider:not(:empty)::after { margin-left: .75em; }
+
+    /* Form controls */
+    .form-group {
+      margin-bottom: 18px;
+    }
+
+    .form-label {
+      display: block;
+      font-size: 12.5px;
+      font-weight: 600;
+      color: #334155;
+      margin-bottom: 6px;
+    }
+
+    .input-wrapper {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .input-icon {
+      position: absolute;
+      left: 14px;
+      color: #94a3b8;
+      font-size: 14px;
+      pointer-events: none;
+    }
+
+    .form-control {
+      width: 100%;
+      background: #ffffff;
+      border: 1.5px solid var(--border-light);
+      border-radius: var(--radius-md);
+      padding: 11px 14px 11px 38px;
+      font-size: 13.5px;
+      color: #0f172a;
+      font-family: inherit;
+      transition: all 0.2s ease;
+      outline: none;
+    }
+
+    .form-control:focus {
+      border-color: var(--accent-primary);
+      box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.12);
+      background: #ffffff;
+    }
+
+    .form-control::placeholder {
+      color: #94a3b8;
+    }
+
+    .btn-submit {
+      width: 100%;
+      background: var(--accent-primary);
+      color: #ffffff;
+      border: none;
+      border-radius: var(--radius-md);
+      padding: 12px 20px;
+      font-size: 13.5px;
+      font-weight: 600;
+      letter-spacing: 0.01em;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: all 0.2s ease;
+      margin-top: 22px;
+      box-shadow: 0 4px 12px rgba(79, 70, 229, 0.25);
+    }
+
+    .btn-submit:hover {
+      background: var(--accent-primary-hover);
+      transform: translateY(-1px);
+      box-shadow: 0 6px 16px rgba(79, 70, 229, 0.35);
+    }
+
+    .btn-submit:active {
+      transform: translateY(0);
+    }
+
+    .btn-submit:disabled {
+      opacity: 0.65;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    /* Error / Alert banner */
+    .alert-banner {
+      background: #fef2f2;
+      border: 1px solid #fecaca;
+      color: #b91c1c;
+      padding: 10px 14px;
+      border-radius: var(--radius-md);
+      font-size: 12.5px;
+      margin-bottom: 18px;
+      display: none;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .footer-note {
+      text-align: center;
+      margin-top: 20px;
+      font-size: 11.5px;
+      color: var(--text-muted);
+    }
+
+    .footer-note i {
+      color: var(--text-muted);
+      font-size: 10px;
+      margin-right: 4px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="login-container">
+    
+    <!-- Brand Header -->
+    <div class="brand-header">
+      <a href="/" class="brand-logo">SHOPMATE<span>.</span></a>
+      <p class="brand-tagline">Autonomous Retail Intelligence</p>
+    </div>
+
+    <!-- Login Card -->
+    <div class="login-card">
+      <div class="card-title">
+        <i class="fa-solid fa-shield-check"></i>
+        <span>Sign In to Continue</span>
+      </div>
+      <p class="card-sub">Choose an account role or enter your credentials to access the store.</p>
+
+      <!-- Role Quick Login Presets -->
+      <div class="role-section-label">Select Account Role</div>
+      <div class="role-chips-grid">
+        <button type="button" class="role-chip-btn active" id="chip-customer" onclick="setPreset('niranjan', 'niranjan123', this)">
+          <i class="fa-solid fa-user"></i>
+          <span>Customer</span>
+          <span style="font-size: 10px; color: var(--text-muted);">(niranjan)</span>
+        </button>
+
+        <button type="button" class="role-chip-btn" id="chip-admin" onclick="setPreset('admin', 'admin123', this)">
+          <i class="fa-solid fa-user-shield"></i>
+          <span>Admin</span>
+          <span style="font-size: 10px; color: var(--text-muted);">(admin)</span>
+        </button>
+
+        <button type="button" class="role-chip-btn" id="chip-support" onclick="setPreset('support', 'support123', this)">
+          <i class="fa-solid fa-headset"></i>
+          <span>Support</span>
+          <span style="font-size: 10px; color: var(--text-muted);">(support)</span>
+        </button>
+      </div>
+
+      <div class="divider">or enter credentials</div>
+
+      <!-- Alert Error Banner -->
+      <div id="login-alert" class="alert-banner">
+        <i class="fa-solid fa-circle-exclamation"></i>
+        <span id="login-alert-text">Invalid username or password</span>
+      </div>
+
+      <!-- Login Form -->
+      <form id="login-form">
+        <div class="form-group">
+          <label class="form-label" for="username">Username</label>
+          <div class="input-wrapper">
+            <i class="fa-regular fa-user input-icon"></i>
+            <input type="text" id="username" class="form-control" value="niranjan" placeholder="Enter username" required autocomplete="username">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="password">Password</label>
+          <div class="input-wrapper">
+            <i class="fa-solid fa-lock input-icon"></i>
+            <input type="password" id="password" class="form-control" value="niranjan123" placeholder="Enter password" required autocomplete="current-password">
+          </div>
+        </div>
+
+        <button type="submit" id="btn-login-submit" class="btn-submit">
+          <i class="fa-solid fa-arrow-right-to-bracket"></i>
+          <span>Sign In to ShopMate</span>
+        </button>
+      </form>
+
+      <div class="footer-note">
+        <i class="fa-solid fa-lock"></i> Protected with JWT Authentication & RBAC Governance
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    const tokenKey = 'shopmate_jwt_token';
+    const userKey = 'shopmate_user_profile';
+
+    // Auto-redirect if already logged in and not forced logout
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('logout') === 'true') {
+      localStorage.removeItem(tokenKey);
+      localStorage.removeItem(userKey);
+      sessionStorage.removeItem('shopmate_signed_in_session');
+    } else if (localStorage.getItem(tokenKey) && localStorage.getItem(userKey)) {
+      window.location.href = '/';
+    }
+
+    function setPreset(u, p, btn) {
+      document.querySelectorAll('.role-chip-btn').forEach(b => b.classList.remove('active'));
+      if (btn) btn.classList.add('active');
+      document.getElementById('username').value = u;
+      document.getElementById('password').value = p;
+      hideAlert();
+    }
+
+    function showAlert(msg) {
+      const alert = document.getElementById('login-alert');
+      const text = document.getElementById('login-alert-text');
+      if (alert && text) {
+        text.textContent = msg;
+        alert.style.display = 'flex';
+      }
+    }
+
+    function hideAlert() {
+      const alert = document.getElementById('login-alert');
+      if (alert) alert.style.display = 'none';
+    }
+
+    document.getElementById('login-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      hideAlert();
+      
+      const username = document.getElementById('username').value.trim();
+      const password = document.getElementById('password').value.trim();
+      const submitBtn = document.getElementById('btn-login-submit');
+
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Authenticating...';
+
+      try {
+        const res = await fetch('/api/auth/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username, password })
+        });
+
+        if (!res.ok) {
+          const err = await res.json();
+          throw new Error(err.detail || 'Login failed');
+        }
+
+        const data = await res.json();
+        localStorage.setItem(tokenKey, data.access_token);
+        localStorage.setItem(userKey, JSON.stringify(data.user));
+        sessionStorage.setItem('shopmate_signed_in_session', 'true');
+
+        submitBtn.innerHTML = '<i class="fa-solid fa-check"></i> Success! Redirecting...';
+        submitBtn.style.background = 'var(--accent-emerald)';
+
+        setTimeout(() => {
+          window.location.href = '/';
+        }, 200);
+      } catch (err) {
+        showAlert(err.message || 'Incorrect username or password');
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = '<i class="fa-solid fa-arrow-right-to-bracket"></i> Sign In to ShopMate';
+      }
+    });
+  </script>
+</body>
+</html>

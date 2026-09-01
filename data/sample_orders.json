@@ -1,0 +1,65 @@
+[
+  {
+    "order_number": "ORD-9821",
+    "customer_name": "Niranjan R",
+    "customer_email": "niranjan@shopmate.ai",
+    "shipping_address": "742 Luxury Avenue, Suite 500, Seattle, WA 98101",
+    "status": "out_for_delivery",
+    "carrier": "FedEx",
+    "tracking_number": "FDX-883920194821",
+    "estimated_delivery": "2026-08-26",
+    "total_amount": 199.99,
+    "items": [
+      {
+        "sku": "ELEC-1001",
+        "name": "AuraSound Pro Wireless Noise-Cancelling Headphones",
+        "quantity": 1,
+        "price": 199.99,
+        "image_url": "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=500&auto=format&fit=crop&q=60"
+      }
+    ],
+    "created_at": "2026-08-23 14:20"
+  },
+  {
+    "order_number": "ORD-7643",
+    "customer_name": "Niranjan R",
+    "customer_email": "niranjan@shopmate.ai",
+    "shipping_address": "742 Luxury Avenue, Suite 500, Seattle, WA 98101",
+    "status": "delivered",
+    "carrier": "UPS",
+    "tracking_number": "1Z9999999999999999",
+    "estimated_delivery": "2026-08-20",
+    "total_amount": 179.99,
+    "items": [
+      {
+        "sku": "APPR-3002",
+        "name": "Velocity Carbon-Plate Marathon Running Shoes",
+        "quantity": 1,
+        "price": 179.99,
+        "image_url": "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=500&auto=format&fit=crop&q=60"
+      }
+    ],
+    "created_at": "2026-08-16 09:15"
+  },
+  {
+    "order_number": "ORD-5120",
+    "customer_name": "Alex Mercer",
+    "customer_email": "alex@retailtest.io",
+    "shipping_address": "120 Market Street, San Francisco, CA 94105",
+    "status": "processing",
+    "carrier": "DHL",
+    "tracking_number": "DHL-4421098231",
+    "estimated_delivery": "2026-08-29",
+    "total_amount": 1299.99,
+    "items": [
+      {
+        "sku": "ELEC-1003",
+        "name": "NovaBook Pro 15.6 4K OLED Ultra Laptop",
+        "quantity": 1,
+        "price": 1299.99,
+        "image_url": "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=500&auto=format&fit=crop&q=60"
+      }
+    ],
+    "created_at": "2026-08-25 11:45"
+  }
+]

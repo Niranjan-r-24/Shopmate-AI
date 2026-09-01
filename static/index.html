@@ -1,0 +1,786 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ShopMate AI | Luxury E-Commerce & Agentic Retail Concierge</title>
+  
+  <script>
+    // Synchronous authentication check before DOM renders
+    (function() {
+      var token = localStorage.getItem('shopmate_jwt_token');
+      var user = localStorage.getItem('shopmate_user_profile');
+      if (!token || !user) {
+        window.location.replace('/login');
+      }
+    })();
+  </script>
+  
+  <!-- Google Fonts: Poppins (Sans) + Playfair Display (Serif) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,800;1,400;1,600&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- FontAwesome 6 Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  
+  <!-- Chart.js for Analytics -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  
+  <!-- Coza Store Inspired Luxury Stylesheet -->
+  <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+
+  <!-- ==========================================
+       1. TOP ANNOUNCEMENT BAR
+       ========================================== -->
+  <div class="top-bar">
+    <div class="top-bar-container">
+      <div class="top-bar-left">
+        <span class="top-bar-notice">
+          <i class="fa-solid fa-truck-fast" style="color: var(--accent-primary); margin-right: 4px;"></i>
+          Complimentary expedited shipping on luxury orders over <strong>$49</strong> • 30-Day Hassle-Free Returns
+        </span>
+      </div>
+      <div class="top-bar-right">
+        <a href="#user-preferences" class="top-bar-link"><i class="fa-solid fa-sliders"></i> Preferences</a>
+        <a href="javascript:void(0)" id="topbar-user-btn" class="top-bar-link">
+          <i class="fa-regular fa-user"></i> <span id="topbar-user-label">Niranjan R</span>
+        </a>
+        <a href="javascript:void(0)" onclick="Auth.clearAuth()" class="top-bar-link" style="color: #f87171; font-weight: 500;" title="Sign Out / Switch Account">
+          <i class="fa-solid fa-arrow-right-from-bracket"></i> Sign Out
+        </a>
+        <select class="top-bar-select">
+          <option value="EN">EN (USD $)</option>
+          <option value="EUR">EUR (€)</option>
+          <option value="GBP">GBP (£)</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==========================================
+       2. LUXURY NAVBAR
+       ========================================== -->
+  <nav class="navbar">
+    <div class="navbar-container">
+      
+      <!-- Brand Logo -->
+      <a href="/" class="nav-brand">
+        <div class="nav-brand-logo">SHOPMATE<span>.</span></div>
+      </a>
+
+      <!-- Menu Navigation -->
+      <div class="nav-menu">
+        <a href="#store-products" class="nav-item-link active">Home</a>
+        <a href="#store-products" class="nav-item-link">Shop</a>
+        <a href="#category-banners" class="nav-item-link">Categories</a>
+        <a href="#user-preferences" class="nav-item-link"><i class="fa-solid fa-sliders" style="font-size: 11px; margin-right: 2px;"></i> Preferences</a>
+        <a href="javascript:void(0)" onclick="App.openAiConcierge('chat')" class="nav-item-link" style="color: var(--accent-primary); font-weight: 600;">AI Concierge</a>
+        <a href="#quick-services" class="nav-item-link">Track Order</a>
+        <a href="#newsletter" class="nav-item-link">VIP Deals</a>
+      </div>
+
+      <!-- Quick Action Icons -->
+      <div class="nav-icons">
+        <button class="nav-icon-btn" onclick="document.getElementById('hero-search-input').focus()" title="Search">
+          <i class="fa-solid fa-magnifying-glass"></i>
+        </button>
+
+        <button class="nav-icon-btn" id="btn-wishlist-trigger" title="Wishlist">
+          <i class="fa-regular fa-heart"></i>
+          <span class="badge-count" id="wishlist-count">2</span>
+        </button>
+
+        <button class="nav-icon-btn" id="btn-cart-drawer-trigger" title="Shopping Cart">
+          <i class="fa-solid fa-bag-shopping"></i>
+          <span class="badge-count" id="cart-count">1</span>
+        </button>
+
+        <button class="user-profile-btn" id="btn-auth-trigger">
+          <i class="fa-solid fa-circle-user" style="color: var(--accent-primary); font-size: 16px;"></i>
+          <span id="auth-username-label">Niranjan R (CUSTOMER)</span>
+        </button>
+      </div>
+
+    </div>
+  </nav>
+
+  <!-- ==========================================
+       3. HERO BANNER WITH AI-POWERED SEARCH
+       ========================================== -->
+  <section class="hero-section">
+    <img src="https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=1400&auto=format&fit=crop&q=80" alt="Luxury Fashion" class="hero-background-img">
+    
+    <div class="hero-container">
+      <div class="hero-content">
+        <div class="hero-subtitle">
+          <i class="fa-solid fa-wand-magic-sparkles"></i> Autonomous Retail Intelligence • Collection 2026
+        </div>
+        <h1 class="hero-title">
+          Timeless Luxury, <span>Powered by AI.</span>
+        </h1>
+        <p class="hero-description">
+          Experience conversational shopping with real-time inventory checks, carrier telemetry, instant return evaluations, and semantic hybrid search.
+        </p>
+
+        <!-- Prominent AI Search Box -->
+        <form id="hero-ai-search-form" class="hero-ai-search">
+          <i class="fa-solid fa-robot"></i>
+          <input type="text" id="hero-search-input" placeholder="Ask ShopMate: 'Noise-cancelling headphones under $200' or 'Return policy'...">
+          <button type="submit" class="btn-ai-search">
+            <i class="fa-solid fa-sparkles"></i> Ask Concierge
+          </button>
+        </form>
+
+        <!-- Quick Prompt Pills -->
+        <div class="hero-prompt-pills">
+          <span style="font-size: 12px; color: var(--text-muted); font-weight: 500;">Suggested:</span>
+          <button class="hero-prompt-pill" data-query="Show me wireless noise-cancelling headphones under $200">🎧 Headphones under $200</button>
+          <button class="hero-prompt-pill" data-query="What is the return policy for opened electronics?">🔄 Electronics Return Policy</button>
+          <button class="hero-prompt-pill" data-query="Is SKU ELEC-1003 in stock?">📦 Check Laptop Stock</button>
+          <button class="hero-prompt-pill" data-query="Where is order ORD-9821?">🚚 Track Order #9821</button>
+          <button class="hero-prompt-pill" data-query="Can I apply coupon SAVE20 on a $120 order?">🎟️ Test Coupon SAVE20</button>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ==========================================
+       4. CATEGORY BANNER SHOWCASE CARDS
+       ========================================== -->
+  <section id="category-banners" class="section-padding">
+    <div class="container">
+      <div class="category-banner-grid">
+        
+        <!-- Category Card 1 -->
+        <div class="category-banner-card" onclick="Catalog.filterByCategory('Audio')">
+          <img src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=800&auto=format&fit=crop&q=80" alt="Audio & Headphones" class="category-banner-img">
+          <div class="category-banner-overlay">
+            <span class="category-banner-tag">Acoustic Engineering</span>
+            <h3 class="category-banner-title">Premium Wireless Audio</h3>
+            <span class="category-banner-cta">Shop Audio <i class="fa-solid fa-arrow-right-long"></i></span>
+          </div>
+        </div>
+
+        <!-- Category Card 2 -->
+        <div class="category-banner-card" onclick="Catalog.filterByCategory('Apparel')">
+          <img src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=800&auto=format&fit=crop&q=80" alt="Luxury Footwear" class="category-banner-img">
+          <div class="category-banner-overlay">
+            <span class="category-banner-tag">Performance Athletics</span>
+            <h3 class="category-banner-title">Carbon Road Footwear</h3>
+            <span class="category-banner-cta">Shop Apparel <i class="fa-solid fa-arrow-right-long"></i></span>
+          </div>
+        </div>
+
+        <!-- Category Card 3 -->
+        <div class="category-banner-card" onclick="Catalog.filterByCategory('Laptops')">
+          <img src="https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=800&auto=format&fit=crop&q=80" alt="Next-Gen Computing" class="category-banner-img">
+          <div class="category-banner-overlay">
+            <span class="category-banner-tag">Creator Workstations</span>
+            <h3 class="category-banner-title">4K OLED Ultra Laptops</h3>
+            <span class="category-banner-cta">Shop Computing <i class="fa-solid fa-arrow-right-long"></i></span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ==========================================
+       5. STORE PRODUCTS OVERVIEW & FILTER TABS
+       ========================================== -->
+  <section id="store-products" class="section-padding" style="background-color: var(--bg-alt); padding-top: 50px;">
+    <div class="container">
+      
+      <!-- Section Header -->
+      <div class="section-header">
+        <div class="section-title-sub">Curated Portfolio</div>
+        <h2 class="section-title">Product Overview</h2>
+      </div>
+
+      <!-- Filter Tabs & Toggle Bar -->
+      <div class="store-filter-bar">
+        <div class="filter-tabs-list" id="category-filter-tabs">
+          <button class="filter-tab-btn active" data-category="all">All Products</button>
+          <button class="filter-tab-btn" data-category="Audio">Audio & Acoustics</button>
+          <button class="filter-tab-btn" data-category="Laptops">Laptops & Tech</button>
+          <button class="filter-tab-btn" data-category="Apparel">Footwear & Apparel</button>
+          <button class="filter-tab-btn" data-category="Wearables">Smart Wearables</button>
+          <button class="filter-tab-btn" data-category="Smart Home">Smart Living</button>
+          <button class="filter-tab-btn" data-category="Cameras">Action Cameras</button>
+        </div>
+
+        <div class="store-filter-actions">
+          <button class="btn-filter-toggle" id="btn-toggle-filter-panel">
+            <i class="fa-solid fa-filter"></i> Filter
+          </button>
+          <button class="btn-filter-toggle" id="btn-toggle-search-bar">
+            <i class="fa-solid fa-magnifying-glass"></i> Search
+          </button>
+        </div>
+      </div>
+
+      <!-- Expandable Filter Panel -->
+      <div class="expandable-filter-panel" id="filter-expandable-box">
+        <div class="filter-panel-grid">
+          
+          <div class="filter-column">
+            <h4>Sort By</h4>
+            <select id="store-sort-select" class="top-bar-select" style="width: 100%; border: 1px solid var(--border-light); padding: 8px; border-radius: 4px; color: var(--text-main); background: #fff;">
+              <option value="rating">Featured & Highest Rated</option>
+              <option value="price_asc">Price: Low to High</option>
+              <option value="price_desc">Price: High to Low</option>
+              <option value="name">Alphabetical</option>
+            </select>
+          </div>
+
+          <div class="filter-column">
+            <h4>Price Ceiling ($)</h4>
+            <input type="range" id="store-price-slider" min="50" max="1500" step="50" value="1500" style="width: 100%;">
+            <div style="display: flex; justify-content: space-between; font-size: 12px; margin-top: 4px;">
+              <span>$50</span>
+              <strong id="store-price-val" style="color: var(--accent-primary);">$1500</strong>
+            </div>
+          </div>
+
+          <div class="filter-column">
+            <h4>Inventory Status</h4>
+            <label style="display: flex; align-items: center; gap: 8px; font-size: 13px; cursor: pointer; margin-top: 6px;">
+              <input type="checkbox" id="store-instock-checkbox"> In Stock Only
+            </label>
+          </div>
+
+          <div class="filter-column">
+            <h4>Keyword Filter</h4>
+            <input type="text" id="store-keyword-input" placeholder="Search title, brand, SKU..." style="width: 100%; padding: 8px; border: 1px solid var(--border-light); border-radius: 4px; font-size: 13px;">
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Dynamic Product Grid -->
+      <div class="product-grid" id="main-product-grid">
+        <!-- Injected dynamically via catalog.js -->
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ==========================================
+       6. QUICK SERVICES & TELEMETRY ACTION BAR
+       ========================================== -->
+  <section id="quick-services" class="section-padding quick-services-section">
+    <div class="container">
+      <div class="section-header" style="text-align: center; margin-bottom: 45px;">
+        <div class="section-title-sub">Instant Multi-Agent Utilities</div>
+        <h2 class="section-title">Retail Services & Tools</h2>
+      </div>
+
+      <div class="service-cards-grid">
+        
+        <!-- Service 1: Order Tracking -->
+        <div class="service-card" onclick="App.openAiConcierge('chat', 'Where is my package for order ORD-9821?')">
+          <div class="service-icon"><i class="fa-solid fa-truck-fast"></i></div>
+          <div class="service-content">
+            <h4>Live Order Telemetry</h4>
+            <p>Track courier delivery progress for active orders (e.g. <code>ORD-9821</code>).</p>
+          </div>
+        </div>
+
+        <!-- Service 2: Returns & Refunds -->
+        <div class="service-card" onclick="App.openAiConcierge('chat', 'What is the return policy for opened electronics and apparel?')">
+          <div class="service-icon"><i class="fa-solid fa-rotate-left"></i></div>
+          <div class="service-content">
+            <h4>30-Day Easy Returns</h4>
+            <p>Automated return window validation and instant RMA authorization.</p>
+          </div>
+        </div>
+
+        <!-- Service 3: Inventory Lookups -->
+        <div class="service-card" onclick="App.openAiConcierge('chat', 'Check stock count and restock dates for ELEC-1001')">
+          <div class="service-icon"><i class="fa-solid fa-warehouse"></i></div>
+          <div class="service-content">
+            <h4>Real-Time Inventory</h4>
+            <p>Check warehouse availability and restock estimations.</p>
+          </div>
+        </div>
+
+        <!-- Service 4: Coupon Engine -->
+        <div class="service-card" onclick="App.openAiConcierge('chat', 'Validate coupon SAVE20 on a $120 cart')">
+          <div class="service-icon"><i class="fa-solid fa-ticket"></i></div>
+          <div class="service-content">
+            <h4>Promo Code Engine</h4>
+            <p>Instant savings calculations with vouchers like <code>SAVE20</code> or <code>VIP10</code>.</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ==========================================
+       6B. CUSTOMER PREFERENCES SECTION
+       ========================================== -->
+  <section id="user-preferences" class="preferences-section">
+    <div class="container">
+      <div class="section-header" style="text-align: center; margin-bottom: 25px;">
+        <div class="section-title-sub" style="color: var(--accent-indigo); font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; font-size: 11.5px;">Smart Personalization Engine</div>
+        <h2 class="section-title">✨ Your Shopping Preferences</h2>
+        <p style="font-size: 13.5px; color: var(--text-muted); margin-top: 6px;">
+          Managed for <strong id="pref-user-badge">Niranjan R</strong>. ShopMate AI automatically customizes apparel sizes, preferred brands, and budgets for your recommendations.
+        </p>
+      </div>
+
+      <div class="pref-layout">
+        
+        <!-- Left: Active Preferences List -->
+        <div class="pref-card">
+          <div class="pref-card-title">
+            <i class="fa-solid fa-brain" style="color: var(--accent-primary);"></i>
+            <span>Active Learned Preferences</span>
+          </div>
+          <p class="pref-card-sub">Preferences saved in your long-term customer profile.</p>
+          
+          <div id="home-pref-list" class="pref-items-list">
+            <!-- Dynamically loaded from memory API -->
+          </div>
+        </div>
+
+        <!-- Right: Add / Update Preference Form -->
+        <div class="pref-card">
+          <div class="pref-card-title">
+            <i class="fa-solid fa-circle-plus" style="color: var(--accent-emerald);"></i>
+            <span>Add or Update Preference</span>
+          </div>
+          <p class="pref-card-sub">Click quick presets or enter your custom shopping criteria.</p>
+          
+          <div class="pref-quick-chips">
+            <button type="button" class="pref-chip" onclick="App.fillPrefForm('apparel', 'shoe_size', '10.5 US')">👟 Shoe Size: 10.5 US</button>
+            <button type="button" class="pref-chip" onclick="App.fillPrefForm('electronics', 'preferred_brand', 'AuraSound')">🎧 Audio: AuraSound</button>
+            <button type="button" class="pref-chip" onclick="App.fillPrefForm('general', 'budget_limit', '$200')">💰 Budget: $200</button>
+            <button type="button" class="pref-chip" onclick="App.fillPrefForm('apparel', 'shirt_size', 'Large')">👕 Apparel: Large</button>
+            <button type="button" class="pref-chip" onclick="App.fillPrefForm('electronics', 'preferred_brand', 'NovaBook')">💻 Laptop: NovaBook</button>
+          </div>
+
+          <form id="home-pref-form">
+            <div class="form-group" style="margin-bottom: 12px;">
+              <label style="font-size: 12px; font-weight: 600; color: #334155;">Category</label>
+              <select id="home-pref-cat" class="form-control" style="font-size: 13px;">
+                <option value="general">General</option>
+                <option value="electronics">Electronics & Audio</option>
+                <option value="apparel">Apparel & Footwear</option>
+                <option value="smart_home">Smart Home & Decor</option>
+              </select>
+            </div>
+            <div class="form-group" style="margin-bottom: 12px;">
+              <label style="font-size: 12px; font-weight: 600; color: #334155;">Preference Key</label>
+              <input type="text" id="home-pref-key" class="form-control" placeholder="e.g. shoe_size, preferred_brand, max_budget" required style="font-size: 13px;">
+            </div>
+            <div class="form-group" style="margin-bottom: 16px;">
+              <label style="font-size: 12px; font-weight: 600; color: #334155;">Preference Value</label>
+              <input type="text" id="home-pref-val" class="form-control" placeholder="e.g. 10.5 US, Sony, $150" required style="font-size: 13px;">
+            </div>
+            <button type="submit" class="btn-primary" style="padding: 10px 18px; font-size: 13px;">
+              <i class="fa-solid fa-floppy-disk"></i> Save Preference
+            </button>
+          </form>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ==========================================
+       7. NEWSLETTER SECTION
+       ========================================== -->
+  <section id="newsletter" class="newsletter-section">
+    <div class="container">
+      <div class="newsletter-content">
+        <h3 class="newsletter-title">Join the ShopMate VIP Circle</h3>
+        <p class="newsletter-sub">Subscribe to receive exclusive drops, private sale invitations, and a $20 luxury voucher.</p>
+        
+        <form id="newsletter-form" class="newsletter-form">
+          <input type="email" class="newsletter-input" placeholder="Enter your email address..." required>
+          <button type="submit" class="btn-newsletter">Subscribe</button>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==========================================
+       8. LUXURY FOOTER
+       ========================================== -->
+  <footer>
+    <div class="container">
+      <div class="footer-grid">
+        
+        <!-- Col 1: About -->
+        <div class="footer-col">
+          <div class="nav-brand-logo" style="color: #fff; margin-bottom: 12px;">SHOPMATE<span>.</span></div>
+          <p style="margin-bottom: 16px; line-height: 1.7;">
+            Enterprise Agentic Retail Assistant engineered with LangGraph, Hybrid Retrieval (ChromaDB + BM25), Cross-Encoder Re-ranking, and Grounded Guardrails.
+          </p>
+          <div style="display: flex; gap: 12px; font-size: 16px; color: #fff;">
+            <a href="javascript:void(0)" class="top-bar-link"><i class="fa-brands fa-instagram"></i></a>
+            <a href="javascript:void(0)" class="top-bar-link"><i class="fa-brands fa-facebook"></i></a>
+            <a href="javascript:void(0)" class="top-bar-link"><i class="fa-brands fa-x-twitter"></i></a>
+            <a href="javascript:void(0)" class="top-bar-link"><i class="fa-brands fa-github"></i></a>
+          </div>
+        </div>
+
+        <!-- Col 2: Categories -->
+        <div class="footer-col">
+          <h4>Categories</h4>
+          <ul>
+            <li><a href="#store-products" onclick="Catalog.filterByCategory('Audio')">Acoustics & Audio</a></li>
+            <li><a href="#store-products" onclick="Catalog.filterByCategory('Apparel')">Footwear & Apparel</a></li>
+            <li><a href="#store-products" onclick="Catalog.filterByCategory('Laptops')">Ultra Laptops</a></li>
+            <li><a href="#store-products" onclick="Catalog.filterByCategory('Wearables')">Smart Wearables</a></li>
+            <li><a href="#store-products" onclick="Catalog.filterByCategory('Smart Home')">Smart Home</a></li>
+          </ul>
+        </div>
+
+        <!-- Col 3: Customer Care -->
+        <div class="footer-col">
+          <h4>Customer Care</h4>
+          <ul>
+            <li><a href="javascript:void(0)" onclick="App.openAiConcierge('chat', 'What is the return policy for opened electronics?')">Return & Refund Policy</a></li>
+            <li><a href="javascript:void(0)" onclick="App.openAiConcierge('chat', 'How much is expedited shipping?')">Shipping & Delivery</a></li>
+            <li><a href="javascript:void(0)" onclick="App.openAiConcierge('chat', 'What does the 1-year warranty cover?')">1-Year Limited Warranty</a></li>
+            <li><a href="javascript:void(0)" onclick="App.openAiConcierge('chat', 'Where is my order ORD-9821?')">Order Tracking</a></li>
+          </ul>
+        </div>
+
+        <!-- Col 4: AI Telemetry & Admin -->
+        <div class="footer-col">
+          <h4>AI Intelligence Hub</h4>
+          <p style="margin-bottom: 12px; font-size: 12px;">Inspect LangGraph workflows, run retrieval benchmarks, or adjust long-term memories.</p>
+          <button class="btn-ai-search" style="padding: 8px 16px; font-size: 11px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);" onclick="App.openAiConcierge('analytics')">
+            <i class="fa-solid fa-chart-pie"></i> Launch AI Dashboard
+          </button>
+        </div>
+
+      </div>
+
+      <div class="footer-bottom">
+        <p>&copy; 2026 ShopMate AI. All rights reserved. Designed for Niranjan R.</p>
+        <div style="display: flex; gap: 14px; font-size: 20px; color: #666;">
+          <i class="fa-brands fa-cc-visa"></i>
+          <i class="fa-brands fa-cc-mastercard"></i>
+          <i class="fa-brands fa-cc-apple-pay"></i>
+          <i class="fa-brands fa-cc-paypal"></i>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ==========================================
+       9. FLOATING SHOPMATE AI CONCIERGE BUTTON
+       ========================================== -->
+  <button class="ai-floating-trigger" id="btn-floating-ai" onclick="App.openAiConcierge('chat')">
+    <span class="ai-pulse-dot"></span>
+    <i class="fa-solid fa-sparkles"></i>
+    <span>Ask ShopMate AI</span>
+  </button>
+
+  <!-- ==========================================
+       10. FULL AI CONCIERGE & CONTROL HUB MODAL
+       ========================================== -->
+  <div class="ai-concierge-modal" id="modal-ai-concierge">
+    <div class="ai-concierge-container">
+      
+      <!-- AI Modal Header -->
+      <div class="ai-modal-header">
+        <div class="ai-modal-title">
+          <div class="avatar assistant-avatar"><i class="fa-solid fa-robot"></i></div>
+          <div>
+            <h2>ShopMate AI Concierge</h2>
+            <p><i class="fa-solid fa-diagram-project"></i> LangGraph Multi-Agent • Dual Memory • Chroma Hybrid RAG</p>
+          </div>
+        </div>
+
+        <!-- AI Navigation Tabs -->
+        <div class="ai-tab-nav">
+          <button class="ai-tab-btn active" id="ai-tab-btn-chat" data-aitab="chat">
+            <i class="fa-solid fa-comments"></i> Assistant Chat
+          </button>
+          <button class="ai-tab-btn" id="ai-tab-btn-rag" data-aitab="rag">
+            <i class="fa-solid fa-layer-group"></i> 4-Way RAG Hub
+          </button>
+          <button class="ai-tab-btn" id="ai-tab-btn-memory" data-aitab="memory">
+            <i class="fa-solid fa-user-gear"></i> Memory (<span id="ai-memory-username">Niranjan R</span>)
+          </button>
+          <button class="ai-tab-btn" id="ai-tab-btn-analytics" data-aitab="analytics">
+            <i class="fa-solid fa-chart-pie"></i> Evaluation & Analytics
+          </button>
+          <button class="ai-tab-btn" id="ai-tab-btn-tools" data-aitab="tools">
+            <i class="fa-solid fa-screwdriver-wrench"></i> Tools Lab
+          </button>
+        </div>
+
+        <button class="icon-btn close-modal" style="color: #374151; background: rgba(0, 0, 0, 0.05);" onclick="App.closeAiConcierge()">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <!-- AI Modal Body -->
+      <div class="ai-modal-body">
+        
+        <!-- PANE 1: CONCIERGE CHAT & LIVE AGENT TIMELINE -->
+        <div id="ai-pane-chat" class="ai-view-pane active">
+          <div class="custom-chatbot-container pastel-theme" id="custom-chatbot-container">
+            
+            <!-- Chat Header -->
+            <div class="custom-chat-header">
+              <div class="custom-sparkle-icon"><i class="fa-solid fa-wand-magic-sparkles"></i></div>
+              <h2 class="custom-chat-title">Ask our AI anything</h2>
+              <button class="custom-theme-toggle" id="btn-theme-toggle" title="Switch Theme (Pastel / Monochrome)">
+                <i class="fa-solid fa-circle-half-stroke"></i> Theme
+              </button>
+            </div>
+            
+            <!-- Main Chat Stream -->
+            <div id="chat-messages" class="custom-chat-stream">
+              <!-- Empty state greeting -->
+              <div id="chat-empty-state" class="custom-empty-state">
+                <p style="text-align: center; color: var(--text-muted); font-size: 14px;">No messages yet. Ask me anything about products, prices, or store policies.</p>
+              </div>
+            </div>
+
+            <!-- Suggestion Chips (bottom) -->
+            <div class="custom-suggestions-container">
+              <div class="custom-suggestions-label">Suggestions on what to ask Our AI</div>
+              <div class="custom-suggestions-chips">
+                <button class="custom-chip-btn prompt-pill" data-query="Compare price of AuraSound headphones with Amazon and eBay">Compare AuraSound on Amazon & eBay</button>
+                <button class="custom-chip-btn prompt-pill" data-query="Price match SKU ELEC-1001 with Amazon at 179.99">Price Match ELEC-1001 ($179.99)</button>
+                <button class="custom-chip-btn prompt-pill" data-query="What is the return policy for opened electronics?">Return Policy</button>
+                <button class="custom-chip-btn prompt-pill" data-query="Recommend headphones within my budget">Recommend with My Preferences</button>
+              </div>
+            </div>
+
+            <!-- Fixed Chat Input Bar -->
+            <div class="custom-chat-input-bar">
+              <form id="chat-form" class="custom-chat-form">
+                <textarea id="chat-input" rows="1" placeholder="Ask me anything about products, price matching, or policies..."></textarea>
+                <button type="submit" id="btn-send" class="custom-btn-send">
+                  <i class="fa-solid fa-arrow-right"></i>
+                </button>
+              </form>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- PANE 2: RAG COMPARATOR & INGESTION -->
+        <div id="ai-pane-rag" class="ai-view-pane" style="padding: 24px; flex-direction: column; gap: 24px;">
+          <div id="rag-grid-layout" style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+            
+            <!-- Search Comparator -->
+            <div class="glass-panel" id="rag-comparator-panel" style="padding: 20px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px;">
+              <h3 style="font-size: 16px; margin-bottom: 6px; color: #0f172a; font-weight: 700;">🔬 4-Way Retrieval Comparator</h3>
+              <p style="font-size: 12.5px; color: #64748b; margin-bottom: 16px;">Test Dense Vector, BM25 Keyword, Hybrid RRF, and Cross-Encoder Re-ranker.</p>
+              
+              <form id="rag-debug-form" style="display: flex; gap: 8px; margin-bottom: 14px;">
+                <input type="text" id="rag-debug-query" class="form-control" value="return policy opened electronics" placeholder="Enter query..." style="background: #ffffff; color: #0f172a;">
+                <button type="submit" class="btn-auth" style="background: var(--accent-primary); color: #fff; border-radius: 8px; padding: 0 16px;">Compare</button>
+              </form>
+
+              <div id="rag-debug-timings" style="display: flex; gap: 8px; margin-bottom: 12px; flex-wrap: wrap;"></div>
+              <div id="rag-debug-results" style="max-height: 420px; overflow-y: auto;"></div>
+            </div>
+
+            <!-- Ingestion & ChromaDB Stats (Admin only) -->
+            <div class="glass-panel" id="rag-ingestion-panel" style="padding: 20px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px;">
+              <h3 style="font-size: 16px; margin-bottom: 6px; color: #0f172a; font-weight: 700;">📥 Document Ingestion Pipeline</h3>
+              <p style="font-size: 12.5px; color: #64748b; margin-bottom: 16px;">Chunk and index PDF, TXT, CSV policy or product documents into ChromaDB.</p>
+              
+              <form id="file-upload-form" style="margin-bottom: 20px;">
+                <div class="form-group">
+                  <label style="color: #334155; font-size: 12px; font-weight: 600;">Category</label>
+                  <select id="upload-policy-type" class="form-control" style="background: #ffffff; color: #0f172a;">
+                    <option value="return_and_refund">Return & Refund Policy</option>
+                    <option value="shipping_and_delivery">Shipping & Delivery</option>
+                    <option value="warranty_and_repairs">Warranty & Repairs</option>
+                    <option value="custom_faq">Custom Store Policy</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label style="color: #334155; font-size: 12px; font-weight: 600;">Choose File</label>
+                  <input type="file" id="upload-file-input" class="form-control" accept=".pdf,.txt,.csv,.md" required style="background: #ffffff; color: #0f172a;">
+                </div>
+                <button type="submit" id="btn-upload-file" class="btn-primary" style="background: var(--accent-primary);">
+                  <i class="fa-solid fa-cloud-arrow-up"></i> Ingest to ChromaDB
+                </button>
+              </form>
+
+              <h4 style="font-size: 13.5px; color: #0f172a; font-weight: 700; margin-bottom: 10px;">ChromaDB Collection Sizes</h4>
+              <div id="rag-stats-box" style="background: #ffffff; border: 1px solid #e2e8f0; padding: 14px; border-radius: 8px; font-size: 12.5px; color: #334155;"></div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- PANE 3: USER MEMORY VIEWER (NIRANJAN R) -->
+        <div id="ai-pane-memory" class="ai-view-pane" style="padding: 24px; flex-direction: column;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <div>
+              <h3 style="font-size: 18px; color: #fff;">🧠 Long-Term Memory Profile: <span id="ai-mem-header-name">Niranjan R</span></h3>
+              <p style="font-size: 12px; color: #94a3b8;">Learned preferences used by ShopMate for tailored recommendations.</p>
+            </div>
+            <button class="btn-auth" style="background: var(--accent-indigo); color: #fff;" onclick="App.closeAiConcierge(); document.getElementById('user-preferences').scrollIntoView({ behavior: 'smooth' });">
+              <i class="fa-solid fa-plus"></i> Add / Manage Preferences
+            </button>
+          </div>
+          <div id="memories-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px;"></div>
+        </div>
+
+        <!-- PANE 4: ANALYTICS & BENCHMARK SUITE -->
+        <div id="ai-pane-analytics" class="ai-view-pane" style="padding: 14px; flex-direction: column; overflow-y: auto;">
+          <div class="analytics-stats-grid">
+            <div class="stat-card glass-panel">
+              <div class="stat-card-title">Total Queries</div>
+              <div id="stat-total-queries" class="stat-card-value">0</div>
+            </div>
+            <div class="stat-card glass-panel">
+              <div class="stat-card-title">Avg Latency</div>
+              <div id="stat-avg-latency" class="stat-card-value">0 ms</div>
+            </div>
+            <div class="stat-card glass-panel">
+              <div class="stat-card-title">Critic Groundedness</div>
+              <div id="stat-critic-rate" class="stat-card-value">100%</div>
+            </div>
+            <div class="stat-card glass-panel">
+              <div class="stat-card-title">Precision@3</div>
+              <div id="stat-precision" class="stat-card-value">0.96</div>
+            </div>
+          </div>
+
+          <div class="charts-grid" style="margin-top: 12px;">
+            <div class="chart-card glass-panel">
+              <h3 style="color: #111827;">⚡ Latency Breakdown (ms)</h3>
+              <canvas id="chart-latency" height="120"></canvas>
+            </div>
+            <div class="chart-card glass-panel">
+              <h3 style="color: #111827;">🤖 Agent Invocation Distribution</h3>
+              <canvas id="chart-agents" height="120"></canvas>
+            </div>
+          </div>
+
+          <div class="glass-panel" style="padding: 12px; margin-top: 12px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+              <div>
+                <h4 style="font-size: 13.5px; color: #111827; font-weight: 600;">Automated Golden Benchmark Suite</h4>
+                <p style="font-size: 11px; color: #4b5563;">Evaluates Precision, Recall, MRR, Routing, and Latency.</p>
+              </div>
+              <button id="btn-run-benchmark" class="btn-auth" style="background: var(--accent-purple); color: #fff; padding: 6px 12px; font-size: 12px;">
+                <i class="fa-solid fa-play"></i> Run Suite
+              </button>
+            </div>
+            <div id="benchmark-results-box" style="background: #f3f4f6; padding: 10px; border-radius: 6px; font-size: 11.5px; color: #1f2937; border: 1px solid #e5e7eb;">
+              Click "Run Suite" to trigger automated evaluation.
+            </div>
+          </div>
+        </div>
+
+        <!-- PANE 5: TOOLS LAB -->
+        <div id="ai-pane-tools" class="ai-view-pane" style="padding: 24px; flex-direction: column; overflow-y: auto;">
+          <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px;">
+            
+            <div class="glass-panel" id="tool-inventory-panel" style="padding: 18px;">
+              <h4 style="color: #fff; margin-bottom: 10px;"><i class="fa-solid fa-warehouse"></i> Inventory Check (Staff Only)</h4>
+              <input type="text" id="tool-sku-input" class="form-control" placeholder="SKU e.g. ELEC-1001" style="margin-bottom: 8px;">
+              <button id="btn-tool-inventory" class="btn-primary">Execute Check</button>
+              <div id="tool-inventory-result" class="timeline-meta-box" style="margin-top: 10px;"></div>
+            </div>
+
+            <div class="glass-panel" id="tool-order-panel" style="padding: 18px;">
+              <h4 style="color: #fff; margin-bottom: 10px;"><i class="fa-solid fa-truck-fast"></i> Order Status</h4>
+              <input type="text" id="tool-order-input" class="form-control" placeholder="Order e.g. ORD-9821" style="margin-bottom: 8px;">
+              <button id="btn-tool-order" class="btn-primary">Track Order</button>
+              <div id="tool-order-result" class="timeline-meta-box" style="margin-top: 10px;"></div>
+            </div>
+
+            <div class="glass-panel" id="tool-coupon-panel" style="padding: 18px;">
+              <h4 style="color: #fff; margin-bottom: 10px;"><i class="fa-solid fa-ticket"></i> Coupon Validator</h4>
+              <input type="text" id="tool-coupon-code" class="form-control" value="SAVE20" style="margin-bottom: 8px;">
+              <input type="number" id="tool-coupon-cart" class="form-control" value="120" style="margin-bottom: 8px;">
+              <button id="btn-tool-coupon" class="btn-primary">Validate Promo</button>
+              <div id="tool-coupon-result" class="timeline-meta-box" style="margin-top: 10px;"></div>
+            </div>
+
+            <div class="glass-panel" id="tool-return-panel" style="padding: 18px;">
+              <h4 style="color: #fff; margin-bottom: 10px;"><i class="fa-solid fa-rotate-left"></i> Return Eligibility</h4>
+              <input type="text" id="tool-return-order" class="form-control" value="ORD-7643" style="margin-bottom: 8px;">
+              <button id="btn-tool-return" class="btn-primary">Evaluate Return</button>
+              <div id="tool-return-result" class="timeline-meta-box" style="margin-top: 10px;"></div>
+            </div>
+
+            <!-- LIVE COMPETITOR PRICE COMPARISON & PRICE MATCH TOOL -->
+            <div class="glass-panel" id="tool-compare-panel" style="padding: 18px; grid-column: span 2;">
+              <h4 style="color: #fff; margin-bottom: 10px;"><i class="fa-solid fa-scale-balanced" style="color: var(--accent-primary);"></i> Real-Time Competitor Price Comparison (Amazon & eBay)</h4>
+              <div style="display: flex; gap: 10px; margin-bottom: 10px;">
+                <input type="text" id="tool-compare-query" class="form-control" value="AuraSound Pro Wireless Headphones" placeholder="Product name or SKU (e.g. ELEC-1001)" style="flex: 1;">
+                <button id="btn-tool-compare" class="btn-primary" style="white-space: nowrap;"><i class="fa-solid fa-magnifying-glass-dollar"></i> Compare Prices</button>
+              </div>
+              <div id="tool-compare-result" class="timeline-meta-box" style="margin-top: 10px;"></div>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ==========================================
+       11. SLIDE-OVER LUXURY SHOPPING CART DRAWER
+       ========================================== -->
+  <div class="cart-drawer-overlay" id="cart-drawer-overlay">
+    <div class="cart-drawer">
+      <div class="cart-drawer-header">
+        <h3>Your Shopping Bag (<span id="cart-drawer-count">1</span>)</h3>
+        <button class="icon-btn" id="btn-close-cart-drawer"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+
+      <div class="cart-items-list" id="cart-items-list">
+        <div class="cart-item-row">
+          <img src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=200" class="cart-item-thumb" alt="Product">
+          <div class="cart-item-info">
+            <h5 class="cart-item-title">AuraSound Pro Wireless Headphones</h5>
+            <span class="cart-item-price">$199.99</span>
+            <div style="font-size: 11px; color: var(--text-muted); margin-top: 2px;">SKU: ELEC-1001 • Qty: 1</div>
+          </div>
+          <button class="icon-btn" style="color: var(--accent-rose);" onclick="App.showToast('Item removed from cart', 'info')"><i class="fa-solid fa-trash-can"></i></button>
+        </div>
+      </div>
+
+      <div class="cart-drawer-footer">
+        <div style="margin-bottom: 12px; display: flex; gap: 8px;">
+          <input type="text" id="cart-coupon-input" placeholder="Promo code (e.g. SAVE20)" class="form-control" style="font-size: 12px;">
+          <button class="btn-primary" style="width: auto; padding: 0 16px; margin: 0; font-size: 12px;" onclick="App.applyCartCoupon()">Apply</button>
+        </div>
+        <div class="cart-total-row">
+          <span>Subtotal:</span>
+          <span id="cart-subtotal-display">$199.99</span>
+        </div>
+        <button class="btn-checkout" onclick="App.showToast('Redirecting to Luxury Checkout for Niranjan R...', 'success')">Proceed to Checkout</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div id="toast-container"></div>
+
+  <!-- App Script Modules -->
+  <script src="/static/js/app.js"></script>
+  <script src="/static/js/auth.js"></script>
+  <script src="/static/js/chat.js"></script>
+  <script src="/static/js/catalog.js"></script>
+  <script src="/static/js/rag_explorer.js"></script>
+  <script src="/static/js/memory_manager.js"></script>
+  <script src="/static/js/analytics.js"></script>
+</body>
+</html>

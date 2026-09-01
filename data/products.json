@@ -1,0 +1,834 @@
+[
+  {
+    "sku": "ELEC-1001",
+    "name": "AuraSound Pro Wireless Noise-Cancelling Headphones",
+    "category": "Audio",
+    "brand": "AuraSound",
+    "price": 199.99,
+    "original_price": 249.99,
+    "description": "Premium over-ear wireless headphones featuring adaptive active noise cancellation, 40mm beryllium drivers, transparency mode, and ultra-plush memory foam earcups.",
+    "features": [
+      "Industry-leading Hybrid Active Noise Cancellation (40dB depth)",
+      "45-hour extended battery life with fast USB-C charge (5 min = 4 hours)",
+      "Multipoint Bluetooth 5.3 connection to laptop and smartphone",
+      "Spatial 3D Audio with dynamic head tracking",
+      "Quad crystal-clear beamforming microphones with AI background noise removal"
+    ],
+    "specifications": {
+      "Driver Size": "40mm Beryllium",
+      "Battery Life": "45 Hours ANC On / 60 Hours ANC Off",
+      "Weight": "255 grams",
+      "Bluetooth": "5.3 with LDAC, AAC, SBC",
+      "Water Resistance": "IPX4 splash resistant"
+    },
+    "stock_count": 42,
+    "rating": 4.8,
+    "review_count": 524,
+    "image_url": "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=500&auto=format&fit=crop&q=60",
+    "tags": [
+      "headphones",
+      "wireless",
+      "noise-cancelling",
+      "audio",
+      "bluetooth",
+      "travel"
+    ]
+  },
+  {
+    "sku": "ELEC-1002",
+    "name": "SonicBuds Air ANC True Wireless Earbuds",
+    "category": "Audio",
+    "brand": "SonicWave",
+    "price": 89.99,
+    "original_price": 119.99,
+    "description": "Ergonomic true wireless earbuds with punchy bass, smart ambient pass-through, low-latency gaming mode, and a pocket-sized wireless charging case.",
+    "features": [
+      "Active Noise Cancellation with 3 preset modes",
+      "32 total hours playback (8h earbuds + 24h charging case)",
+      "Qi wireless charging compatible case",
+      "IPX7 waterproof rating - ideal for workouts and running",
+      "Touch gesture controls for volume, tracks, and voice assistant"
+    ],
+    "specifications": {
+      "Battery Life": "32 Hours total",
+      "Water Resistance": "IPX7",
+      "Charging": "USB-C + Qi Wireless",
+      "Codecs": "AAC, SBC, aptX"
+    },
+    "stock_count": 115,
+    "rating": 4.6,
+    "review_count": 318,
+    "image_url": "https://images.unsplash.com/photo-1590658268037-6bf12165a8df?w=500&auto=format&fit=crop&q=60",
+    "tags": [
+      "earbuds",
+      "wireless",
+      "gym",
+      "waterproof",
+      "anc",
+      "running"
+    ]
+  },
+  {
+    "sku": "ELEC-1003",
+    "name": "NovaBook Pro 15.6 4K OLED Ultra Laptop",
+    "category": "Laptops",
+    "brand": "NovaTech",
+    "price": 1299.99,
+    "original_price": 1499.99,
+    "description": "Engineered for creators and software engineers: Intel Core Ultra 7 processor, 32GB LPDDR5X RAM, 1TB NVMe PCIe 4.0 SSD, and a vivid 15.6-inch 4K OLED display with 100% DCI-P3 color gamut.",
+    "features": [
+      "15.6-inch 4K UHD (3840x2160) OLED touchscreen, 120Hz refresh rate",
+      "Intel Core Ultra 7 155H 16-Core Processor with dedicated NPU for local AI",
+      "32GB Dual-Channel 7467MHz RAM & 1TB Gen4 SSD",
+      "Thunderbolt 4, HDMI 2.1, SD Card Reader, and Wi-Fi 7",
+      "All-aluminum aerospace chassis weighing just 1.58kg"
+    ],
+    "specifications": {
+      "Processor": "Intel Core Ultra 7 155H",
+      "RAM": "32GB LPDDR5X",
+      "Storage": "1TB NVMe SSD",
+      "Display": "15.6 4K OLED 120Hz",
+      "Battery": "84Wh, up to 14 hours battery life",
+      "Weight": "1.58 kg"
+    },
+    "stock_count": 18,
+    "rating": 4.9,
+    "review_count": 142,
+    "image_url": "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=500&auto=format&fit=crop&q=60",
+    "tags": [
+      "laptop",
+      "ultrabook",
+      "oled",
+      "intel",
+      "4k",
+      "programming",
+      "creator"
+    ]
+  },
+  {
+    "sku": "ELEC-1004",
+    "name": "SwiftBook Air 13.3 Lightweight Ultrabook",
+    "category": "Laptops",
+    "brand": "Swift",
+    "price": 799.99,
+    "original_price": 899.99,
+    "description": "Ultra-portable 13.3-inch laptop designed for students and professionals. Features AMD Ryzen 7 8840U, 16GB RAM, 512GB SSD, all-day 16-hour battery life, and silent fanless cooling.",
+    "features": [
+      "Ultra-thin 11.9mm profile and featherlight 1.1kg body",
+      "AMD Ryzen 7 8840U 8-Core processor with Radeon 780M graphics",
+      "13.3-inch 2.8K IPS Anti-Glare Retina display",
+      "Full-sized backlit keyboard with biometric fingerprint sensor",
+      "Fast 65W USB-C PD charging"
+    ],
+    "specifications": {
+      "Processor": "AMD Ryzen 7 8840U",
+      "RAM": "16GB LPDDR5",
+      "Storage": "512GB NVMe SSD",
+      "Display": "13.3 2.8K 90Hz IPS",
+      "Battery": "60Wh, up to 16 hours",
+      "Weight": "1.1 kg"
+    },
+    "stock_count": 0,
+    "rating": 4.5,
+    "review_count": 89,
+    "image_url": "https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=500&auto=format&fit=crop&q=60",
+    "tags": [
+      "laptop",
+      "lightweight",
+      "students",
+      "budget",
+      "portable",
+      "out-of-stock"
+    ]
+  },
+  {
+    "sku": "ELEC-1005",
+    "name": "PulseFit Ultra Titanium GPS Smartwatch",
+    "category": "Wearables",
+    "brand": "PulseFit",
+    "price": 279.99,
+    "original_price": 329.99,
+    "description": "Rugged grade-5 titanium smartwatch featuring dual-frequency GPS, ECG monitor, SpO2 blood oxygen sensor, sapphire crystal face, and 14-day battery life.",
+    "features": [
+      "Grade-5 Aerospace Titanium case with scratch-resistant Sapphire glass",
+      "Dual-band L1+L5 GPS navigation with offline topographic trail maps",
+      "Continuous health tracking: ECG, SpO2, HRV stress, sleep score, skin temperature",
+      "10 ATM / 100 meters dive water rating",
+      "14 days battery life in normal mode / 48 hours in continuous GPS tracking"
+    ],
+    "specifications": {
+      "Case Material": "Grade 5 Titanium",
+      "Display": "1.43 AMOLED 1000 nits",
+      "Sensors": "ECG, SpO2, Optical HR, Barometer, Compass",
+      "Waterproof": "10 ATM / 100m",
+      "Battery": "14 days battery life"
+    },
+    "stock_count": 28,
+    "rating": 4.7,
+    "review_count": 210,
+    "image_url": "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=500&auto=format&fit=crop&q=60",
+    "tags": [
+      "smartwatch",
+      "fitness",
+      "gps",
+      "titanium",
+      "wearable",
+      "running",
+      "heart-rate"
+    ]
+  },
+  {
+    "sku": "HOME-2001",
+    "name": "LuminaGlow Smart RGBIC Ambient Floor Lamp",
+    "category": "Smart Home",
+    "brand": "Lumina",
+    "price": 79.99,
+    "original_price": 99.99,
+    "description": "Minimalist corner smart floor lamp featuring segmented RGBIC color technology, music sync visualizer, and voice assistant integration (Alexa & Google Assistant).",
+    "features": [
+      "16 Million customizable colors with dynamic moving scene presets",
+      "Built-in ultra-sensitive acoustic mic for dynamic music sync",
+      "Smart App control via Wi-Fi and Bluetooth + physical remote control",
+      "Timer scheduling and sunrise wake-up simulation",
+      "Sturdy weighted metal base with space-saving 90-degree corner fit"
+    ],
+    "specifications": {
+      "Height": "57 inches (145 cm)",
+      "Lumens": "1500 LM",
+      "Connectivity": "Wi-Fi 2.4GHz + Bluetooth 5.0",
+      "Voice Control": "Amazon Alexa, Google Home, Siri Shortcuts"
+    },
+    "stock_count": 64,
+    "rating": 4.6,
+    "review_count": 182,
+    "image_url": "https://images.unsplash.com/photo-1507473885765-e6ed057f782c?w=500&auto=format&fit=crop&q=60",
+    "tags": [
+      "smart home",
+      "lighting",
+      "rgb",
+      "alexa",
+      "home decor",
+      "ambient"
+    ]
+  },
+  {
+    "sku": "HOME-2002",
+    "name": "RoboClean Pro AI Lidar Robot Vacuum & Mop",
+    "category": "Smart Home",
+    "brand": "RoboClean",
+    "price": 349.99,
+    "original_price": 449.99,
+    "description": "High-power 6000Pa suction robot vacuum equipped with dual 3D obstacle avoidance LiDAR, sonic mopping, auto-empty dirt base, and multi-floor precision mapping.",
+    "features": [
+      "HyperSuction 6000Pa motor with automatic carpet boost",
+      "LiDAR 360-degree navigation with AI recognition for cables and pet hazards",
+      "Sonic vibrating mop pad scrubbing 3000 times/min for stubborn stains",
+      "60-day hands-free self-emptying base station with sealed allergen bag",
+      "Customizable no-go zones and scheduled room-by-room cleaning"
+    ],
+    "specifications": {
+      "Suction Power": "6000 Pa",
+      "Dustbin Capacity": "400ml Robot + 3L Station",
+      "Runtime": "180 minutes (cleans up to 2500 sq ft)",
+      "Navigation": "LiDAR + AI 3D Obstacle Avoidance"
+    },
+    "stock_count": 19,
+    "rating": 4.8,
+    "review_count": 345,
+    "image_url": "https://images.unsplash.com/photo-1518770660439-4636190af475?w=500&auto=format&fit=crop&q=60",
+    "tags": [
+      "robot vacuum",
+      "smart home",
+      "cleaning",
+      "mop",
+      "lidar",
+      "automation"
+    ]
+  },
+  {
+    "sku": "APPR-3001",
+    "name": "AeroStorm Pro All-Weather Waterproof Jacket",
+    "category": "Apparel",
+    "brand": "StormPeak",
+    "price": 149.99,
+    "original_price": 189.99,
+    "description": "Engineered 3-layer breathable GORE-TEX membrane hardshell jacket designed for mountaineering, rain protection, wind resistance, and outdoor trekking.",
+    "features": [
+      "28,000mm waterproof rating with fully sealed taped seams",
+      "20,000g/m2 breathable membrane keeps you dry without overheating",
+      "Underarm zippered ventilation pit-zips for rapid temperature control",
+      "Helmet-compatible storm hood with 3-way cord adjustment",
+      "YKK Aquaguard waterproof zippers throughout"
+    ],
+    "specifications": {
+      "Material": "100% Recycled 3-Layer Ripstop Nylon with DWR finish",
+      "Weight": "410 grams",
+      "Available Sizes": "S, M, L, XL, XXL",
+      "Colors": "Obsidian Black, Alpine Blue, Forest Green"
+    },
+    "stock_count": 55,
+    "rating": 4.9,
+    "review_count": 274,
+    "image_url": "https://images.unsplash.com/photo-1548883354-7622d03aca27?w=500&auto=format&fit=crop&q=60",
+    "tags": [
+      "jacket",
+      "apparel",
+      "waterproof",
+      "hiking",
+      "rainwear",
+      "outdoor"
+    ]
+  },
+  {
+    "sku": "APPR-3002",
+    "name": "Velocity Carbon-Plate Marathon Running Shoes",
+    "category": "Apparel",
+    "brand": "Velocity Athletics",
+    "price": 179.99,
+    "original_price": 219.99,
+    "description": "Elite race-day road running shoes featuring full-length carbon fiber propulsion plate, supercritical PEBA foam cushioning, and ultra-breathable engineered mesh.",
+    "features": [
+      "Full-length curved carbon fiber propulsion plate maximizes energy return",
+      "Ultralight Supercritical Nitrogen-infused foam midsole (40mm heel stack)",
+      "Engineered single-layer breathable mesh upper with locked-in heel counter",
+      "Continental rubber high-traction outsole compound for wet & dry grip",
+      "Featherweight design: only 198g per shoe (Men's size 9 US)"
+    ],
+    "specifications": {
+      "Heel Drop": "8 mm (40mm heel / 32mm forefoot)",
+      "Shoe Weight": "198g (Size 9 US)",
+      "Available Sizes": "US Men 7 - 13 / Women 8 - 14",
+      "Terrain": "Road, Track, Marathon"
+    },
+    "stock_count": 37,
+    "rating": 4.8,
+    "review_count": 195,
+    "image_url": "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=500&auto=format&fit=crop&q=60",
+    "tags": [
+      "shoes",
+      "running",
+      "marathon",
+      "sneakers",
+      "carbon-plate",
+      "apparel",
+      "athletics"
+    ]
+  },
+  {
+    "sku": "CAM-4001",
+    "name": "CinePro 4K 60FPS Gimbal Stabilized Action Camera",
+    "category": "Cameras",
+    "brand": "CineCam",
+    "price": 299.99,
+    "original_price": 369.99,
+    "description": "Ultra HD action camera with dual color touchscreen displays, 6-axis gyro FlowState electronic stabilization, 4K/60fps HDR video, and 20m naked waterproof rating.",
+    "features": [
+      "4K video up to 60fps / 1080p super slow motion at 240fps",
+      "Dual touchscreens (1.4-inch front selfie screen + 2.27-inch responsive rear display)",
+      "RockSteady 3.0 + 360-degree Horizon Steady image stabilization",
+      "Native waterproof down to 20 meters (65 feet) without external case",
+      "Magnetic quick-release mounting system for helmets, bikes, and chests"
+    ],
+    "specifications": {
+      "Sensor": "1/1.3-inch 48MP CMOS Sensor",
+      "Field of View": "155-degree Ultra-Wide",
+      "Battery": "1770mAh Extreme Temp Battery (up to 160 minutes recording)",
+      "Storage": "MicroSD slot up to 512GB (UHS-3 required)"
+    },
+    "stock_count": 22,
+    "rating": 4.7,
+    "review_count": 164,
+    "image_url": "https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?w=500&auto=format&fit=crop&q=60",
+    "tags": [
+      "camera",
+      "action camera",
+      "4k",
+      "waterproof",
+      "video",
+      "sports",
+      "travel"
+    ]
+  },
+  {
+    "sku": "ELEC-1006",
+    "name": "Samsung Galaxy S24 Ultra",
+    "category": "Electronic",
+    "brand": "Samsung",
+    "price": 1199.99,
+    "original_price": 1299.99,
+    "description": "Flagship smartphone featuring Galaxy AI, titanium frame, 200MP camera, and built-in S Pen.",
+    "features": [
+      "200MP Main Camera with optical quality zoom",
+      "Galaxy AI photo editing and Circle to Search",
+      "Snapdragon 8 Gen 3 for Galaxy with NPU",
+      "Dynamic AMOLED 2X flat display with 2600 nits peak brightness"
+    ],
+    "specifications": {
+      "Display": "6.8 inch AMOLED QHD+",
+      "Processor": "Snapdragon 8 Gen 3",
+      "Camera": "200MP + 50MP + 12MP + 10MP",
+      "Storage": "256GB / 512GB / 1TB",
+      "Battery": "5000 mAh"
+    },
+    "stock_count": 25,
+    "rating": 4.8,
+    "review_count": 92,
+    "image_url": "https://images.unsplash.com/photo-1610945265064-0e34e5519bbf?w=500",
+    "tags": [
+      "samsung",
+      "galaxy",
+      "smartphone",
+      "android",
+      "mobile"
+    ]
+  },
+  {
+    "sku": "ELEC-1007",
+    "name": "Apple MacBook Pro 14 M3",
+    "category": "Electronic",
+    "brand": "Apple",
+    "price": 1599.99,
+    "original_price": 1799.99,
+    "description": "Pro laptop powered by the next-generation M3 chip, Liquid Retina XDR display, and up to 22 hours battery life.",
+    "features": [
+      "Apple M3 chip with 8-core CPU and 10-core GPU",
+      "Up to 22 hours of battery life",
+      "14.2-inch Liquid Retina XDR display with ProMotion",
+      "1080p FaceTime HD camera and studio-quality mic array"
+    ],
+    "specifications": {
+      "Processor": "Apple M3",
+      "RAM": "8GB / 16GB / 24GB",
+      "Storage": "512GB / 1TB SSD",
+      "Display": "14.2-inch Liquid Retina XDR",
+      "Battery": "Up to 22 hours"
+    },
+    "stock_count": 14,
+    "rating": 4.9,
+    "review_count": 78,
+    "image_url": "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=500",
+    "tags": [
+      "apple",
+      "macbook",
+      "laptop",
+      "macos",
+      "m3"
+    ]
+  },
+  {
+    "sku": "ELEC-1008",
+    "name": "SteelSeries Apex Pro Mechanical Keyboard",
+    "category": "Electronic",
+    "brand": "SteelSeries",
+    "price": 189.99,
+    "original_price": 209.99,
+    "description": "Adjustable mechanical gaming keyboard featuring OmniPoint 2.0 switches and OLED Smart Display.",
+    "features": [
+      "OmniPoint 2.0 adjustable mechanical switches",
+      "OLED Smart Display delivers info straight from games and apps",
+      "Aircraft-grade aluminum alloy top plate",
+      "Magnetic wrist rest provides full palm support"
+    ],
+    "specifications": {
+      "Switch Type": "OmniPoint 2.0 Adjustable",
+      "Lighting": "Per-key RGB",
+      "Connection": "Wired USB-A",
+      "Layout": "Full-size"
+    },
+    "stock_count": 45,
+    "rating": 4.7,
+    "review_count": 134,
+    "image_url": "https://images.unsplash.com/photo-1587829741301-dc798b83add3?w=500",
+    "tags": [
+      "keyboard",
+      "mechanical",
+      "gaming",
+      "steelseries",
+      "rgb"
+    ]
+  },
+  {
+    "sku": "ELEC-1009",
+    "name": "Logitech G Pro X Superlight",
+    "category": "Electronic",
+    "brand": "Logitech",
+    "price": 129.99,
+    "original_price": 149.99,
+    "description": "Ultra-lightweight wireless gaming mouse featuring HERO 25K sensor and zero-additive PTFE feet.",
+    "features": [
+      "Incredibly lightweight design under 63 grams",
+      "HERO 25K precision sensor up to 25,600 DPI",
+      "LIGHTSPEED wireless connection with 1ms report rate",
+      "Large, zero-additive PTFE feet for smooth glide"
+    ],
+    "specifications": {
+      "Weight": "Under 63 grams",
+      "Sensor": "HERO 25K",
+      "DPI": "100 - 25,600",
+      "Battery Life": "Up to 70 hours"
+    },
+    "stock_count": 60,
+    "rating": 4.8,
+    "review_count": 218,
+    "image_url": "https://images.unsplash.com/photo-1615663245857-ac93bb7c39e7?w=500",
+    "tags": [
+      "mouse",
+      "wireless",
+      "gaming",
+      "logitech",
+      "lightweight"
+    ]
+  },
+  {
+    "sku": "ELEC-1010",
+    "name": "Fossil Minimalist Stainless Steel Watch",
+    "category": "Electronic",
+    "brand": "Fossil",
+    "price": 149.99,
+    "original_price": 169.99,
+    "description": "Slim, analog quartz watch with a minimalist blue dial and stainless steel mesh bracelet.",
+    "features": [
+      "Slim 44mm case with mineral dial window",
+      "Quartz movement with 3-hand analog display",
+      "Stainless steel mesh bracelet with fold-over clasp",
+      "Water resistant to 50 meters (165 feet)"
+    ],
+    "specifications": {
+      "Case Size": "44 mm",
+      "Band Material": "Stainless Steel Mesh",
+      "Movement": "Quartz",
+      "Water Resistance": "50 meters"
+    },
+    "stock_count": 12,
+    "rating": 4.5,
+    "review_count": 56,
+    "image_url": "https://images.unsplash.com/photo-1524592094714-0f0654e20314?w=500",
+    "tags": [
+      "watch",
+      "analog",
+      "fossil",
+      "mesh",
+      "stainless-steel"
+    ]
+  },
+  {
+    "sku": "ELEC-1011",
+    "name": "Apple iPad Pro 11-inch M4",
+    "category": "Electronic",
+    "brand": "Apple",
+    "price": 999.99,
+    "original_price": 1099.99,
+    "description": "Ultra-thin iPad Pro featuring the breakthrough M4 chip, tandem OLED Ultra Retina XDR display, and Wi-Fi 6E.",
+    "features": [
+      "Tandem OLED Ultra Retina XDR display with 1600 nits peak brightness",
+      "Next-generation Apple M4 chip with NPU",
+      "Landscape 12MP Ultra Wide camera with Center Stage",
+      "Compatible with Apple Pencil Pro and Magic Keyboard"
+    ],
+    "specifications": {
+      "Processor": "Apple M4",
+      "Display": "11-inch Tandem OLED",
+      "Camera": "12MP Wide + 12MP Ultra Wide",
+      "Battery Life": "Up to 10 hours"
+    },
+    "stock_count": 22,
+    "rating": 4.9,
+    "review_count": 87,
+    "image_url": "https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?w=500",
+    "tags": [
+      "apple",
+      "ipad",
+      "tablet",
+      "m4",
+      "oled"
+    ]
+  },
+  {
+    "sku": "APPR-3003",
+    "name": "Levi's 501 Original Fit Denim Jeans",
+    "category": "Fashion",
+    "brand": "Levi's",
+    "price": 69.99,
+    "original_price": 79.99,
+    "description": "The original blue jeans since 1873. Straight fit jeans with signature button fly.",
+    "features": [
+      "100% Cotton non-stretch denim fabric",
+      "Signature button fly design",
+      "Straight leg fit sits at the waist",
+      "Classic 5-pocket styling"
+    ],
+    "specifications": {
+      "Material": "100% Cotton",
+      "Fit": "Straight Leg",
+      "Fly Type": "Button Fly",
+      "Care": "Machine washable"
+    },
+    "stock_count": 140,
+    "rating": 4.6,
+    "review_count": 412,
+    "image_url": "https://images.unsplash.com/photo-1542272604-787c3835535d?w=500",
+    "tags": [
+      "jeans",
+      "denim",
+      "levis",
+      "apparel",
+      "casual"
+    ]
+  },
+  {
+    "sku": "APPR-3004",
+    "name": "Calvin Klein Liquid Touch Slim Fit T-Shirt",
+    "category": "Fashion",
+    "brand": "Calvin Klein",
+    "price": 29.99,
+    "original_price": 39.99,
+    "description": "Luxuriously soft liquid cotton T-shirt featuring a slim fit and subtle branding on the chest.",
+    "features": [
+      "Liquid cotton fabric feels cool and smooth against the skin",
+      "Slim fit silhouette for a modern look",
+      "Ribbed crew neck collar",
+      "Embroidered Calvin Klein logo at the chest"
+    ],
+    "specifications": {
+      "Material": "100% Cotton",
+      "Fit": "Slim Fit",
+      "Neckline": "Crew Neck",
+      "Weight": "160 GSM"
+    },
+    "stock_count": 210,
+    "rating": 4.5,
+    "review_count": 184,
+    "image_url": "https://images.unsplash.com/photo-1521572267360-ee0c2909d518?w=500",
+    "tags": [
+      "t-shirt",
+      "calvin-klein",
+      "cotton",
+      "apparel",
+      "casual"
+    ]
+  },
+  {
+    "sku": "APPR-3005",
+    "name": "Adidas Stan Smith Classic Leather Sneakers",
+    "category": "Fashion",
+    "brand": "Adidas",
+    "price": 85.0,
+    "original_price": 95.0,
+    "description": "Timeless leather tennis shoes with perforated 3-Stripes and contrasting heel tab.",
+    "features": [
+      "Full grain premium leather upper",
+      "Perforated 3-Stripes branding",
+      "Synthetic leather lining and rubber cupsole",
+      "Ortholite moisture-wicking sockliner"
+    ],
+    "specifications": {
+      "Material": "Leather Upper / Rubber Sole",
+      "Closure": "Lace-up",
+      "Gender": "Unisex",
+      "Style": "Low-top tennis"
+    },
+    "stock_count": 85,
+    "rating": 4.7,
+    "review_count": 290,
+    "image_url": "https://images.unsplash.com/photo-1608231387042-66d1773070a5?w=500",
+    "tags": [
+      "sneakers",
+      "shoes",
+      "adidas",
+      "leather",
+      "casual"
+    ]
+  },
+  {
+    "sku": "APPR-3006",
+    "name": "Hugo Boss Modern Fit Virgin Wool Suit",
+    "category": "Fashion",
+    "brand": "Hugo Boss",
+    "price": 499.99,
+    "original_price": 599.99,
+    "description": "Impeccably tailored 2-piece suit made from premium virgin wool with a modern fit silhouette.",
+    "features": [
+      "100% Virgin Wool woven in Italy",
+      "2-button single breasted jacket with notch lapels",
+      "Flat-front dress trousers with unhemmed bottoms",
+      "Fully lined interior with multiple chest pockets"
+    ],
+    "specifications": {
+      "Material": "100% Virgin Wool / Viscose Lining",
+      "Fit": "Modern Fit",
+      "Pockets": "Flap pockets",
+      "Dry Clean": "Dry clean only"
+    },
+    "stock_count": 15,
+    "rating": 4.9,
+    "review_count": 64,
+    "image_url": "https://images.unsplash.com/photo-1594938298603-c8148c4dae35?w=500",
+    "tags": [
+      "suit",
+      "formal",
+      "hugo-boss",
+      "wool",
+      "apparel"
+    ]
+  },
+  {
+    "sku": "HOME-2003",
+    "name": "IKEA Landskrona Scandinavian 3-Seater Sofa",
+    "category": "Home & Furniture",
+    "brand": "IKEA",
+    "price": 699.99,
+    "original_price": 799.99,
+    "description": "Minimalist fabric sofa featuring Tufted seat cushions and solid oak wood legs.",
+    "features": [
+      "Highly resilient polyurethane foam seat cushions",
+      "Durable polyester fabric cover is stain resistant",
+      "Sturdy solid oak wood legs styled in retro look",
+      "Generous seating space comfortably fits 3 adults"
+    ],
+    "specifications": {
+      "Dimensions": "80 x 35 x 31 inches",
+      "Frame Material": "Solid Pine / Steel",
+      "Legs": "Solid Oak",
+      "Assembly": "Required"
+    },
+    "stock_count": 9,
+    "rating": 4.6,
+    "review_count": 73,
+    "image_url": "https://images.unsplash.com/photo-1493663284031-b7e3aefcae8e?w=500",
+    "tags": [
+      "sofa",
+      "furniture",
+      "scandinavian",
+      "ikea",
+      "living-room"
+    ]
+  },
+  {
+    "sku": "HOME-2004",
+    "name": "West Elm Solid Oak Queen Bed Frame",
+    "category": "Home & Furniture",
+    "brand": "West Elm",
+    "price": 899.99,
+    "original_price": 999.99,
+    "description": "Elegant mid-century modern queen bed frame constructed from sustainably sourced solid FSC oak wood.",
+    "features": [
+      "Solid FSC-certified oak wood headboard and frame",
+      "Slat roll support system - no box spring required",
+      "Tapered legs and warm honey finish",
+      "Accommodates standard queen size mattresses"
+    ],
+    "specifications": {
+      "Size": "Queen",
+      "Material": "Solid Oak",
+      "Finish": "Warm Honey Lacquer",
+      "Slat count": "14 roll slats"
+    },
+    "stock_count": 5,
+    "rating": 4.8,
+    "review_count": 48,
+    "image_url": "https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?w=500",
+    "tags": [
+      "bed",
+      "furniture",
+      "oak",
+      "west-elm",
+      "bedroom"
+    ]
+  },
+  {
+    "sku": "HOME-2005",
+    "name": "Pottery Barn Rustic Walnut Dining Table",
+    "category": "Home & Furniture",
+    "brand": "Pottery Barn",
+    "price": 749.99,
+    "original_price": 849.99,
+    "description": "Farmhouse-style rectangular dining table made from solid American walnut wood with a natural oil finish.",
+    "features": [
+      "Solid American walnut tabletop showing natural wood grains",
+      "Durable trestle base support frame",
+      "Seats up to 6-8 people comfortably",
+      "Natural hand-applied protective oil finish"
+    ],
+    "specifications": {
+      "Dimensions": "72 x 36 x 30 inches",
+      "Material": "Solid Walnut",
+      "Weight Capacity": "200 lbs",
+      "Style": "Rustic Farmhouse"
+    },
+    "stock_count": 7,
+    "rating": 4.7,
+    "review_count": 35,
+    "image_url": "https://images.unsplash.com/photo-1577140917170-285929fb55b7?w=500",
+    "tags": [
+      "table",
+      "dining",
+      "furniture",
+      "walnut",
+      "rustic"
+    ]
+  },
+  {
+    "sku": "AUTO-5001",
+    "name": "Pioneer AVH double-DIN Car Media Receiver",
+    "category": "Auto & Accessories",
+    "brand": "Pioneer",
+    "price": 349.99,
+    "original_price": 399.99,
+    "description": "Car media player featuring a 6.8-inch capacitive touchscreen, Apple CarPlay, Android Auto, and Bluetooth.",
+    "features": [
+      "6.8-inch capacitive touchscreen display",
+      "Seamless Apple CarPlay and Android Auto integration",
+      "Built-in Bluetooth for hands-free calling and audio streaming",
+      "Backup camera input compatible"
+    ],
+    "specifications": {
+      "Screen Size": "6.8 inches",
+      "Resolution": "800 x 480",
+      "Chassis": "Double-DIN",
+      "RMS Power": "14W x 4 channels"
+    },
+    "stock_count": 18,
+    "rating": 4.5,
+    "review_count": 82,
+    "image_url": "https://images.unsplash.com/photo-1549399542-7e3f8b79c341?w=500",
+    "tags": [
+      "pioneer",
+      "carplay",
+      "android-auto",
+      "bluetooth",
+      "auto"
+    ]
+  },
+  {
+    "sku": "AUTO-5002",
+    "name": "JBL GTO Series 6.5-inch Car Speakers",
+    "category": "Auto & Accessories",
+    "brand": "JBL",
+    "price": 99.99,
+    "original_price": 119.99,
+    "description": "High-fidelity 2-way coaxial car speakers featuring Plus One fiberglass cones and soft dome tweeters.",
+    "features": [
+      "Plus One fiberglass woofer cones with rubber surrounds",
+      "Edge-driven soft dome tweeters with adjustable output levels",
+      "3-ohm voice coils compensate for thin factory speaker wires",
+      "High power handling: 75 Watts RMS / 225 Watts Peak"
+    ],
+    "specifications": {
+      "Speaker Size": "6.5 inches",
+      "Configuration": "2-way Coaxial",
+      "RMS Power": "75 Watts",
+      "Impedance": "3 ohms"
+    },
+    "stock_count": 30,
+    "rating": 4.6,
+    "review_count": 147,
+    "image_url": "https://images.unsplash.com/photo-1545454675-3531b543be5d?w=500",
+    "tags": [
+      "speakers",
+      "audio",
+      "jbl",
+      "auto",
+      "coaxial"
+    ]
+  }
+]
