@@ -6,7 +6,12 @@ from typing import Optional
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 class Settings(BaseSettings):
-    model_config = SettingsConfigDict(env_file=".env", extra="ignore")
+    # Hosted providers sometimes expose an unset environment variable as an
+    # empty string. Treat that the same as an absent value so typed defaults
+    # below remain usable.
+    model_config = SettingsConfigDict(
+        env_file=".env", extra="ignore", env_ignore_empty=True
+    )
 
     PROJECT_NAME: str = "ShopMate AI - Agentic Retail Assistant"
     VERSION: str = "1.0.0"
