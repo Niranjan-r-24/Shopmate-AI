@@ -28,7 +28,7 @@ class Settings(BaseSettings):
     CHROMA_PERSIST_DIR: Path = RUNTIME_DATA_DIR / "chroma_db"
     
     # Database (PostgreSQL with SQLite fallback)
-    DATABASE_URL: str = os.getenv("DATABASE_URL", f"sqlite:///{BASE_DIR}/shopmate.db")
+    DATABASE_URL: str = os.getenv("DATABASE_URL") or f"sqlite:///{RUNTIME_DATA_DIR / 'shopmate.db'}"
     
     # Security & JWT
     SECRET_KEY: str = os.getenv("SECRET_KEY", "shopmate-super-secret-key-genai-2026-production-ready-32bytes")
