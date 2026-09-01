@@ -5,6 +5,11 @@ from typing import Optional
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+# Vercel's /var/task deployment directory is read-only at runtime.
+RUNTIME_DATA_DIR = (
+    Path("/tmp/shopmate-ai") if os.getenv("VERCEL") else BASE_DIR
+)
+
 class Settings(BaseSettings):
     # Hosted providers sometimes expose an unset environment variable as an
     # empty string. Treat that the same as an absent value so typed defaults
@@ -19,8 +24,8 @@ class Settings(BaseSettings):
     
     # Environment & Paths
     BASE_DIR: Path = BASE_DIR
-    DATA_DIR: Path = BASE_DIR / "data"
-    CHROMA_PERSIST_DIR: Path = BASE_DIR / "chroma_db"
+    DATA_DIR: Path = RUNTIME_DATA_DIR / "data"
+    CHROMA_PERSIST_DIR: Path = RUNTIME_DATA_DIR / "chroma_db"
     
     # Database (PostgreSQL with SQLite fallback)
     DATABASE_URL: str = os.getenv("DATABASE_URL", f"sqlite:///{BASE_DIR}/shopmate.db")
