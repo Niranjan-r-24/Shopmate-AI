@@ -51,16 +51,16 @@ class ProductSearchAgent:
                     f"### ⚖️ Price Comparison & Top Picks for **{shopmate_prod['name']}** (SKU: `{shopmate_prod['sku']}`)\n",
                     f"| Store / Platform | Price | Stock / Status | Policy Note |",
                     f"| :--- | :--- | :--- | :--- |",
-                    f"| **ShopMate AI Store** | **${shopmate_prod['price']:.2f}** | {'✅ In Stock' if shopmate_prod['in_stock'] else '❌ Out of Stock'} | Official Warranty & 30-Day Returns |"
+                    f"| **ShopMate AI Store** | **₹{shopmate_prod['price']:.2f}** | {'✅ In Stock' if shopmate_prod['in_stock'] else '❌ Out of Stock'} | Official Warranty & 30-Day Returns |"
                 ]
                 for comp in competitors:
                     status_note = "Eligible for Price Match" if comp.get("eligible_for_price_match") else "Marketplace Listing"
-                    price_diff_str = f"-${comp['price_difference']:.2f} cheaper" if comp.get("price_difference", 0) > 0 else f"+${abs(comp.get('price_difference', 0)):.2f} higher"
-                    lines.append(f"| **{comp['competitor']}** | **${comp['price']:.2f}** | {price_diff_str} | {status_note} |")
+                    price_diff_str = f"-₹{comp['price_difference']:.2f} cheaper" if comp.get("price_difference", 0) > 0 else f"+₹{abs(comp.get('price_difference', 0)):.2f} higher"
+                    lines.append(f"| **{comp['competitor']}** | **₹{comp['price']:.2f}** | {price_diff_str} | {status_note} |")
 
                 lines.append(f"\n💡 **Recommendation:** {comp_res.get('recommended_action')}")
                 if comp_res.get("price_match_available"):
-                    lines.append(f"\n✨ **Action Available:** You can ask me: *\"Price match SKU {shopmate_prod['sku']} with Amazon at ${competitors[0]['price']:.2f}\"* to get an instant checkout discount code!")
+                    lines.append(f"\n✨ **Action Available:** You can ask me: *\"Price match SKU {shopmate_prod['sku']} with Amazon at ₹{competitors[0]['price']:.2f}\"* to get an instant checkout discount code!")
 
                 response_text = "\n".join(lines)
             else:
@@ -71,7 +71,7 @@ class ProductSearchAgent:
                 ]
                 for comp in competitors:
                     clean_title = comp.get('title', '').rstrip(')')
-                    lines.append(f"| **{comp['competitor']}** | **${comp['price']:.2f}** | {clean_title[:55]}... |")
+                    lines.append(f"| **{comp['competitor']}** | **₹{comp['price']:.2f}** | {clean_title[:55]}... |")
 
                 lines.append(f"\n💡 **Status:** {comp_res.get('recommended_action')}")
                 response_text = "\n".join(lines)
@@ -206,7 +206,7 @@ class ProductSearchAgent:
             size_match_str = f" | Size Match: {p.get('size_match')}" if 'size_match' in p else ""
             retrieved_chunks.append({
                 "id": f"prod_{p['sku']}",
-                "content": f"Product: {p['name']} | Brand: {p['brand']} | Price: ${p['price']} | Rating: {p['rating']} | Features: {', '.join(p.get('features', []))}{size_match_str}",
+                "content": f"Product: {p['name']} | Brand: {p['brand']} | Price: ₹{p['price']} | Rating: {p['rating']} | Features: {', '.join(p.get('features', []))}{size_match_str}",
                 "metadata": {"sku": p["sku"], "name": p["name"], "price": p["price"], "brand": p["brand"]},
                 "score": p.get("relevance_score", 0.9)
             })
@@ -240,7 +240,7 @@ class ProductSearchAgent:
                         size_note = f" | *Sizing:* {match_icon} ({size_pref})"
                     clean_name = p.get('name', '').strip().rstrip(')')
                     bullets.append(
-                        f"**{idx+1}. {clean_name}** — **${p['price']:.2f}** ({p['rating']} ⭐)\n"
+                        f"**{idx+1}. {clean_name}** — **₹{p['price']:.2f}** ({p['rating']} ⭐)\n"
                         f"   - *Brand:* {p['brand']} | *Status:* {stock_label}{size_note}\n"
                         f"   - *Highlights:* {features_str}"
                     )

@@ -173,8 +173,8 @@ const Chat = {
               <span class="product-card-brand">${this.escapeHtml(p.brand || '')}</span>
               <h4 class="product-card-title">${this.escapeHtml(p.name)}</h4>
               <div class="product-card-price-row">
-                <span class="product-price-current">$${Number(p.price).toFixed(2)}</span>
-                ${p.original_price > p.price ? `<span class="product-price-original">$${Number(p.original_price).toFixed(2)}</span>` : ''}
+                <span class="product-price-current">₹${Number(p.price).toFixed(2)}</span>
+                ${p.original_price > p.price ? `<span class="product-price-original">₹${Number(p.original_price).toFixed(2)}</span>` : ''}
               </div>
               <div style="display: flex; justify-content: space-between; align-items: center; margin-top: auto;">
                 <span class="product-rating"><i class="fa-solid fa-star"></i> ${p.rating || 4.5}</span>

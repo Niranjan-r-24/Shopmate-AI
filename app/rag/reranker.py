@@ -104,23 +104,27 @@ class CrossEncoderReranker:
             matched_digits = sum(1 for d in digits_in_query if d in combined_text)
             digit_boost = (matched_digits / len(digits_in_query) * 0.2) if digits_in_query else 0.0
 
-            # 4. Brand & Category Match Boost
+            # 4. Brand, Category & Policy Title Boost
             brand = str(metadata.get("brand", "")).lower()
             category = str(metadata.get("category", "")).lower()
+            title = str(metadata.get("title", "")).lower()
+            policy_type = str(metadata.get("policy_type", "")).lower()
             brand_boost = 0.15 if brand and brand in query_clean else 0.0
             cat_boost = 0.10 if category and category in query_clean else 0.0
+            title_boost = 0.25 if any(w in title or w in policy_type for w in salient_words if len(w) > 3) else 0.0
 
             # 5. Prior hybrid retrieval score contribution
             prior_score = doc.get("final_score", doc.get("score", 0.5))
 
             # Combine signals
             cross_score = (
-                (word_recall * 0.40) +
+                (word_recall * 0.35) +
                 (phrase_bonus) +
                 (digit_boost) +
                 (brand_boost) +
                 (cat_boost) +
-                (prior_score * 0.20)
+                (title_boost) +
+                (prior_score * 0.15)
             )
             # Clip between 0.0 and 1.0
             norm_score = max(0.05, min(0.99, cross_score))

@@ -97,7 +97,7 @@ class DocumentIngestionPipeline:
                 f"Product: {name} ({brand})\n"
                 f"SKU: {sku}\n"
                 f"Category: {category}\n"
-                f"Price: ${price:.2f}\n"
+                f"Price: ₹{price:.2f}\n"
                 f"Rating: {p.get('rating', 4.5)}/5 ({p.get('review_count', 0)} reviews)\n"
                 f"Description: {description}\n"
                 f"Key Features: {features_text}\n"

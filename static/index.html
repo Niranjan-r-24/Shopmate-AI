@@ -40,7 +40,7 @@
       <div class="top-bar-left">
         <span class="top-bar-notice">
           <i class="fa-solid fa-truck-fast" style="color: var(--accent-primary); margin-right: 4px;"></i>
-          Complimentary expedited shipping on luxury orders over <strong>$49</strong> • 30-Day Hassle-Free Returns
+          Complimentary expedited shipping on luxury orders over <strong>₹490</strong> • 30-Day Hassle-Free Returns
         </span>
       </div>
       <div class="top-bar-right">
@@ -52,6 +52,7 @@
           <i class="fa-solid fa-arrow-right-from-bracket"></i> Sign Out
         </a>
         <select class="top-bar-select">
+          <option value="IN">IN (INR ₹)</option>
           <option value="EN">EN (USD $)</option>
           <option value="EUR">EUR (€)</option>
           <option value="GBP">GBP (£)</option>
@@ -128,7 +129,7 @@
         <!-- Prominent AI Search Box -->
         <form id="hero-ai-search-form" class="hero-ai-search">
           <i class="fa-solid fa-robot"></i>
-          <input type="text" id="hero-search-input" placeholder="Ask ShopMate: 'Noise-cancelling headphones under $200' or 'Return policy'...">
+          <input type="text" id="hero-search-input" placeholder="Ask ShopMate: 'Noise-cancelling headphones under ₹25000' or 'Return policy'...">
           <button type="submit" class="btn-ai-search">
             <i class="fa-solid fa-sparkles"></i> Ask Concierge
           </button>
@@ -137,11 +138,11 @@
         <!-- Quick Prompt Pills -->
         <div class="hero-prompt-pills">
           <span style="font-size: 12px; color: var(--text-muted); font-weight: 500;">Suggested:</span>
-          <button class="hero-prompt-pill" data-query="Show me wireless noise-cancelling headphones under $200">🎧 Headphones under $200</button>
+          <button class="hero-prompt-pill" data-query="Show me wireless noise-cancelling headphones under ₹25000">🎧 Headphones under ₹25,000</button>
           <button class="hero-prompt-pill" data-query="What is the return policy for opened electronics?">🔄 Electronics Return Policy</button>
           <button class="hero-prompt-pill" data-query="Is SKU ELEC-1003 in stock?">📦 Check Laptop Stock</button>
           <button class="hero-prompt-pill" data-query="Where is order ORD-9821?">🚚 Track Order #9821</button>
-          <button class="hero-prompt-pill" data-query="Can I apply coupon SAVE20 on a $120 order?">🎟️ Test Coupon SAVE20</button>
+          <button class="hero-prompt-pill" data-query="Can I apply coupon SAVE20 on a ₹12000 order?">🎟️ Test Coupon SAVE20</button>
         </div>
 
       </div>
@@ -238,11 +239,11 @@
           </div>
 
           <div class="filter-column">
-            <h4>Price Ceiling ($)</h4>
-            <input type="range" id="store-price-slider" min="50" max="1500" step="50" value="1500" style="width: 100%;">
+            <h4>Price Ceiling (₹)</h4>
+            <input type="range" id="store-price-slider" min="500" max="150000" step="500" value="150000" style="width: 100%;">
             <div style="display: flex; justify-content: space-between; font-size: 12px; margin-top: 4px;">
-              <span>$50</span>
-              <strong id="store-price-val" style="color: var(--accent-primary);">$1500</strong>
+              <span>₹500</span>
+              <strong id="store-price-val" style="color: var(--accent-primary);">₹150000</strong>
             </div>
           </div>
 
@@ -309,7 +310,7 @@
         </div>
 
         <!-- Service 4: Coupon Engine -->
-        <div class="service-card" onclick="App.openAiConcierge('chat', 'Validate coupon SAVE20 on a $120 cart')">
+        <div class="service-card" onclick="App.openAiConcierge('chat', 'Validate coupon SAVE20 on a ₹12000 cart')">
           <div class="service-icon"><i class="fa-solid fa-ticket"></i></div>
           <div class="service-content">
             <h4>Promo Code Engine</h4>
@@ -360,7 +361,7 @@
           <div class="pref-quick-chips">
             <button type="button" class="pref-chip" onclick="App.fillPrefForm('apparel', 'shoe_size', '10.5 US')">👟 Shoe Size: 10.5 US</button>
             <button type="button" class="pref-chip" onclick="App.fillPrefForm('electronics', 'preferred_brand', 'AuraSound')">🎧 Audio: AuraSound</button>
-            <button type="button" class="pref-chip" onclick="App.fillPrefForm('general', 'budget_limit', '$200')">💰 Budget: $200</button>
+            <button type="button" class="pref-chip" onclick="App.fillPrefForm('general', 'budget_limit', '₹20000')">💰 Budget: ₹20,000</button>
             <button type="button" class="pref-chip" onclick="App.fillPrefForm('apparel', 'shirt_size', 'Large')">👕 Apparel: Large</button>
             <button type="button" class="pref-chip" onclick="App.fillPrefForm('electronics', 'preferred_brand', 'NovaBook')">💻 Laptop: NovaBook</button>
           </div>
@@ -381,7 +382,7 @@
             </div>
             <div class="form-group" style="margin-bottom: 16px;">
               <label style="font-size: 12px; font-weight: 600; color: #334155;">Preference Value</label>
-              <input type="text" id="home-pref-val" class="form-control" placeholder="e.g. 10.5 US, Sony, $150" required style="font-size: 13px;">
+              <input type="text" id="home-pref-val" class="form-control" placeholder="e.g. 10.5 US, Sony, ₹15000" required style="font-size: 13px;">
             </div>
             <button type="submit" class="btn-primary" style="padding: 10px 18px; font-size: 13px;">
               <i class="fa-solid fa-floppy-disk"></i> Save Preference
@@ -400,7 +401,7 @@
     <div class="container">
       <div class="newsletter-content">
         <h3 class="newsletter-title">Join the ShopMate VIP Circle</h3>
-        <p class="newsletter-sub">Subscribe to receive exclusive drops, private sale invitations, and a $20 luxury voucher.</p>
+        <p class="newsletter-sub">Subscribe to receive exclusive drops, private sale invitations, and a ₹2000 luxury voucher.</p>
         
         <form id="newsletter-form" class="newsletter-form">
           <input type="email" class="newsletter-input" placeholder="Enter your email address..." required>
@@ -555,7 +556,7 @@
               <div class="custom-suggestions-label">Suggestions on what to ask Our AI</div>
               <div class="custom-suggestions-chips">
                 <button class="custom-chip-btn prompt-pill" data-query="Compare price of AuraSound headphones with Amazon and eBay">Compare AuraSound on Amazon & eBay</button>
-                <button class="custom-chip-btn prompt-pill" data-query="Price match SKU ELEC-1001 with Amazon at 179.99">Price Match ELEC-1001 ($179.99)</button>
+                <button class="custom-chip-btn prompt-pill" data-query="Price match SKU ELEC-1001 with Amazon at 17999">Price Match ELEC-1001 (₹17,999)</button>
                 <button class="custom-chip-btn prompt-pill" data-query="What is the return policy for opened electronics?">Return Policy</button>
                 <button class="custom-chip-btn prompt-pill" data-query="Recommend headphones within my budget">Recommend with My Preferences</button>
               </div>
@@ -654,7 +655,7 @@
             </div>
             <div class="stat-card glass-panel">
               <div class="stat-card-title">Precision@3</div>
-              <div id="stat-precision" class="stat-card-value">0.96</div>
+              <div id="stat-precision" class="stat-card-value">1.00</div>
             </div>
           </div>
 
@@ -706,7 +707,7 @@
             <div class="glass-panel" id="tool-coupon-panel" style="padding: 18px;">
               <h4 style="color: #fff; margin-bottom: 10px;"><i class="fa-solid fa-ticket"></i> Coupon Validator</h4>
               <input type="text" id="tool-coupon-code" class="form-control" value="SAVE20" style="margin-bottom: 8px;">
-              <input type="number" id="tool-coupon-cart" class="form-control" value="120" style="margin-bottom: 8px;">
+              <input type="number" id="tool-coupon-cart" class="form-control" value="12000" style="margin-bottom: 8px;">
               <button id="btn-tool-coupon" class="btn-primary">Validate Promo</button>
               <div id="tool-coupon-result" class="timeline-meta-box" style="margin-top: 10px;"></div>
             </div>
@@ -750,7 +751,7 @@
           <img src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=200" class="cart-item-thumb" alt="Product">
           <div class="cart-item-info">
             <h5 class="cart-item-title">AuraSound Pro Wireless Headphones</h5>
-            <span class="cart-item-price">$199.99</span>
+            <span class="cart-item-price">₹19,999.00</span>
             <div style="font-size: 11px; color: var(--text-muted); margin-top: 2px;">SKU: ELEC-1001 • Qty: 1</div>
           </div>
           <button class="icon-btn" style="color: var(--accent-rose);" onclick="App.showToast('Item removed from cart', 'info')"><i class="fa-solid fa-trash-can"></i></button>
@@ -764,7 +765,7 @@
         </div>
         <div class="cart-total-row">
           <span>Subtotal:</span>
-          <span id="cart-subtotal-display">$199.99</span>
+          <span id="cart-subtotal-display">₹19,999.00</span>
         </div>
         <button class="btn-checkout" onclick="App.showToast('Redirecting to Luxury Checkout for Niranjan R...', 'success')">Proceed to Checkout</button>
       </div>

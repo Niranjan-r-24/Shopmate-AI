@@ -34,7 +34,7 @@ class CouponValidationAgent:
             # Extract competitor price from params or regex
             comp_price = params.get("competitor_price") or params.get("max_price") or 0.0
             if comp_price <= 0:
-                price_m = re.search(r"(?:\$|at\s+|for\s+)(\d+(?:\.\d{2})?)", f"{raw_query} {query}", re.IGNORECASE)
+                price_m = re.search(r"(?:₹|rs\.?|inr|\$|at\s+|for\s+)\s*(\d+(?:\.\d{2})?)", f"{raw_query} {query}", re.IGNORECASE)
                 if price_m:
                     comp_price = float(price_m.group(1))
 
@@ -56,9 +56,9 @@ class CouponValidationAgent:
                     resp = (
                         f"🎉 **Price Match Guarantee Approved!**\n\n"
                         f"- **Item:** {pm_res['product_name']} (`{pm_res['sku']}`)\n"
-                        f"- **Original Price:** ~~${pm_res['original_price']:.2f}~~\n"
-                        f"- **Matched Price:** 🏷️ **${pm_res['matched_price']:.2f}**\n"
-                        f"- **Instant Savings:** 💸 **-${pm_res['savings_amount']:.2f}**\n\n"
+                        f"- **Original Price:** ~~₹{pm_res['original_price']:.2f}~~\n"
+                        f"- **Matched Price:** 🏷️ **₹{pm_res['matched_price']:.2f}**\n"
+                        f"- **Instant Savings:** 💸 **-₹{pm_res['savings_amount']:.2f}**\n\n"
                         f"Use authorized promo code **`{pm_res['coupon_code']}`** at checkout!"
                     )
                 else:
@@ -77,7 +77,7 @@ class CouponValidationAgent:
                 }
 
         code = params.get("coupon_code") or query
-        cart_total = float(params.get("cart_total", 100.0))  # Default sample cart $100 if unspecified
+        cart_total = float(params.get("cart_total", 1000.0))  # Default sample cart ₹1000 if unspecified
         
         tool_res = tool_validate_coupon(code=code, cart_total=cart_total)
         coupon_card = None
@@ -90,16 +90,16 @@ class CouponValidationAgent:
             response_text = (
                 f"🎟️ **Promo Code Applied:** `{tool_res.get('code')}`\n\n"
                 f"- **Discount Offer:** {tool_res.get('discount_description')}\n"
-                f"- **Sample Subtotal:** ${cart_total:.2f}\n"
-                f"- **Instant Savings:** 💸 **-${savings:.2f}**\n"
-                f"- **Estimated Total:** **${final_total:.2f}**\n\n"
+                f"- **Sample Subtotal:** ₹{cart_total:.2f}\n"
+                f"- **Instant Savings:** 💸 **-₹{savings:.2f}**\n"
+                f"- **Estimated Total:** **₹{final_total:.2f}**\n\n"
                 f"✨ {tool_res.get('description', 'Coupon is active and ready to use at checkout!')}"
             )
         else:
             response_text = (
                 f"❌ **Coupon Check Failed:**\n\n"
                 f"{tool_res.get('message')}\n\n"
-                f"💡 *Popular Active Codes:* Try `SAVE20` (20% off over $50), `FREESHIP` (Free delivery), or `VIP10` (10% off storewide)."
+                f"💡 *Popular Active Codes:* Try `SAVE20` (20% off over ₹500), `FREESHIP` (Free delivery), or `VIP10` (10% off storewide)."
             )
 
         duration_ms = (time.time() - start_time) * 1000.0

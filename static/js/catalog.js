@@ -3,7 +3,7 @@
  */
 const Catalog = {
   activeCategory: 'all',
-  maxPrice: 1500,
+  maxPrice: 150000,
   inStockOnly: false,
   sortBy: 'rating',
   searchTerm: '',
@@ -32,7 +32,7 @@ const Catalog = {
     if (priceSlider && priceVal) {
       priceSlider.addEventListener('input', (e) => {
         this.maxPrice = parseFloat(e.target.value);
-        priceVal.textContent = `$${this.maxPrice}`;
+        priceVal.textContent = `₹${this.maxPrice}`;
         this.loadProducts();
       });
     }
@@ -186,8 +186,8 @@ const Catalog = {
               <h3 class="product-title">${p.name}</h3>
               
               <div class="product-price-row">
-                <span class="price-current">$${Number(p.price).toFixed(2)}</span>
-                ${p.original_price > p.price ? `<span class="price-original">$${Number(p.original_price).toFixed(2)}</span>` : ''}
+                <span class="price-current">₹${Number(p.price).toFixed(2)}</span>
+                ${p.original_price > p.price ? `<span class="price-original">₹${Number(p.original_price).toFixed(2)}</span>` : ''}
               </div>
 
               <div class="product-card-footer">
@@ -221,7 +221,7 @@ const Catalog = {
         <img src="${img || 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=200'}" class="cart-item-thumb" alt="${name}">
         <div class="cart-item-info">
           <h5 class="cart-item-title">${name}</h5>
-          <span class="cart-item-price">$${Number(price).toFixed(2)}</span>
+          <span class="cart-item-price">₹${Number(price).toFixed(2)}</span>
           <div style="font-size: 11px; color: var(--text-muted); margin-top: 2px;">SKU: ${sku} • Qty: 1</div>
         </div>
         <button class="icon-btn" style="color: var(--accent-rose);" onclick="this.parentElement.remove(); window.App.showToast('Item removed', 'info');"><i class="fa-solid fa-trash-can"></i></button>

@@ -72,7 +72,7 @@ class QueryRewriter:
                 
                 # Budget preference
                 if "budget" in key and val.lower() not in clean.lower():
-                    if any(w in clean.lower() for w in ["recommend", "best", "good", "suggest", "show me", "looking for", "buy", "headphones", "earbuds", "laptop", "watch", "shoes", "jacket", "camera", "vacuum", "lamp"]) and not any(x in clean.lower() for x in ["under", "below", "less than", "$"]):
+                    if any(w in clean.lower() for w in ["recommend", "best", "good", "suggest", "show me", "looking for", "buy", "headphones", "earbuds", "laptop", "watch", "shoes", "jacket", "camera", "vacuum", "lamp"]) and not any(x in clean.lower() for x in ["under", "below", "less than", "₹", "rs", "inr", "$"]):
                         clean = f"{clean} under {val}"
                     
         return clean.strip() or original

@@ -71,7 +71,7 @@ const App = {
     if (newsForm) {
       newsForm.addEventListener('submit', (e) => {
         e.preventDefault();
-        this.showToast('Welcome to the VIP Circle! $20 luxury voucher applied: VIP10', 'success');
+        this.showToast('Welcome to the VIP Circle! ₹2000 luxury voucher applied: VIP10', 'success');
         newsForm.reset();
       });
     }

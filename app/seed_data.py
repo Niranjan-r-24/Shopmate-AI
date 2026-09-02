@@ -118,7 +118,7 @@ def seed_all():
                     discount_value=20.0,
                     min_order_value=50.0,
                     max_discount=100.0,
-                    description="20% luxury discount on orders of $50 or more"
+                    description="20% luxury discount on orders of ₹50 or more"
                 ),
                 Coupon(
                     code="FREESHIP",
@@ -139,7 +139,7 @@ def seed_all():
                     discount_type="fixed",
                     discount_value=50.0,
                     min_order_value=300.0,
-                    description="$50 off premium laptops and acoustic gear over $300"
+                    description="₹50 off premium laptops and acoustic gear over ₹300"
                 )
             ]
             db.add_all(coupons)

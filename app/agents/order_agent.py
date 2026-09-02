@@ -45,7 +45,7 @@ class OrderTrackingAgent:
                 f"- **Estimated Delivery:** 📅 **{ord_data.get('estimated_delivery')}**\n"
                 f"- **Destination:** {ord_data.get('shipping_address')}\n"
                 f"- **Items:** {items_list}\n"
-                f"- **Total:** ${ord_data.get('total_amount'):.2f}\n\n"
+                f"- **Total:** ₹{ord_data.get('total_amount'):.2f}\n\n"
                 f"🔗 [Click here to track directly on {ord_data.get('carrier')} Portal]({tool_res.get('tracking_url')})"
             )
         else:

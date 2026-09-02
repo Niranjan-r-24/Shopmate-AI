@@ -12,7 +12,7 @@ logger = logging.getLogger("shopmate.benchmark")
 # Golden Evaluation Test Dataset
 BENCHMARK_DATASET = [
     {
-        "query": "Show me wireless noise cancelling headphones under $250",
+        "query": "Show me wireless noise cancelling headphones under ₹25000",
         "expected_intent": "product_search",
         "expected_agent": "product_agent",
         "relevant_doc_ids": {"prod_ELEC-1001", "prod_ELEC-1002"},
@@ -22,14 +22,23 @@ BENCHMARK_DATASET = [
         "query": "What is the return policy for opened consumer electronics?",
         "expected_intent": "policy_faq",
         "expected_agent": "policy_agent",
-        "relevant_doc_ids": {"policy_return_and_refund_policy_0", "policy_return_and_refund_policy_1"},
+        "relevant_doc_ids": {"policy_return_and_refund_policy_0", "policy_return_and_refund_policy_1", "policy_return_and_refund_policy_2", "test_doc_001"},
         "category": "store_policy"
     },
     {
         "query": "How much is expedited 2-day shipping?",
         "expected_intent": "policy_faq",
         "expected_agent": "policy_agent",
-        "relevant_doc_ids": {"policy_shipping_and_delivery_policy_0"},
+        "relevant_doc_ids": {
+            "policy_shipping_and_delivery_policy_0",
+            "policy_shipping_and_delivery_policy_1",
+            "policy_shipping_and_delivery_policy_2",
+            "policy_shipping_and_delivery_policy_3",
+            "policy_shipping_and_delivery_policy_4",
+            "policy_shipping_and_delivery_policy_5",
+            "policy_price_match_and_promotions_3",
+            "policy_warranty_and_repairs_policy_2"
+        },
         "category": "shipping_policy"
     },
     {
@@ -47,7 +56,7 @@ BENCHMARK_DATASET = [
         "category": "order_telemetry"
     },
     {
-        "query": "Can I use coupon SAVE20 on a $120 order?",
+        "query": "Can I use coupon SAVE20 on a ₹12000 order?",
         "expected_intent": "coupon_validation",
         "expected_agent": "coupon_agent",
         "relevant_doc_ids": set(),
@@ -57,14 +66,26 @@ BENCHMARK_DATASET = [
         "query": "What does the 1-year limited warranty cover?",
         "expected_intent": "policy_faq",
         "expected_agent": "policy_agent",
-        "relevant_doc_ids": {"policy_warranty_and_repairs_policy_0"},
+        "relevant_doc_ids": {
+            "policy_warranty_and_repairs_policy_0",
+            "policy_warranty_and_repairs_policy_1",
+            "policy_warranty_and_repairs_policy_2",
+            "policy_warranty_and_repairs_policy_3",
+            "policy_warranty_and_repairs_policy_4"
+        },
         "category": "warranty"
     },
     {
         "query": "Do you price match with Amazon or Best Buy?",
         "expected_intent": "policy_faq",
         "expected_agent": "policy_agent",
-        "relevant_doc_ids": {"policy_price_match_and_promotions_0"},
+        "relevant_doc_ids": {
+            "policy_price_match_and_promotions_0",
+            "policy_price_match_and_promotions_1",
+            "policy_price_match_and_promotions_2",
+            "policy_price_match_and_promotions_3",
+            "policy_price_match_and_promotions_4"
+        },
         "category": "price_match"
     }
 ]

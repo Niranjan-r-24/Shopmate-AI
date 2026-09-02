@@ -95,8 +95,8 @@ class IntentRouterAgent:
                     params["coupon_code"] = code
                     break
 
-        # Max price / budget filter or Price Match target price
-        price_match = re.search(r"(?:under|below|less than|max(?:imum)?|at|for|\$)\s*\$?(\d+(?:\.\d{2})?)", combined, re.IGNORECASE)
+        # Max price / budget filter or Price Match target price (Supports ₹, Rs., INR, $)
+        price_match = re.search(r"(?:under|below|less than|max(?:imum)?|budget(?:\s*of)?|at|for|₹|rs\.?|inr|\$)\s*(?:₹|rs\.?|inr|\$)?\s*(\d+(?:\.\d{2})?)", combined, re.IGNORECASE)
         if price_match:
             try:
                 params["max_price"] = float(price_match.group(1))
@@ -104,17 +104,17 @@ class IntentRouterAgent:
             except ValueError:
                 pass
 
-        # Standalone dollar amount extraction (e.g. $179.99 or 179.99)
+        # Standalone currency amount extraction (e.g. ₹17999, Rs 1200, $179.99)
         if "competitor_price" not in params:
-            dollar_m = re.search(r"\$(\d+(?:\.\d{2})?)", combined)
-            if dollar_m:
+            curr_m = re.search(r"(?:₹|rs\.?|inr|\$)\s*(\d+(?:\.\d{2})?)", combined, re.IGNORECASE)
+            if curr_m:
                 try:
-                    params["competitor_price"] = float(dollar_m.group(1))
+                    params["competitor_price"] = float(curr_m.group(1))
                 except ValueError:
                     pass
 
         # Cart total extraction
-        cart_match = re.search(r"(?:cart total|cart value|subtotal|order of)\s*\$?(\d+(?:\.\d{2})?)", combined, re.IGNORECASE)
+        cart_match = re.search(r"(?:cart total|cart value|subtotal|order of)\s*(?:₹|rs\.?|inr|\$)?\s*(\d+(?:\.\d{2})?)", combined, re.IGNORECASE)
         if cart_match:
             try:
                 params["cart_total"] = float(cart_match.group(1))
@@ -128,7 +128,7 @@ class IntentRouterAgent:
         combined = f"{q} {rewritten.lower()}"
 
         # 1. Order Tracking
-        if "order_number" in params or any(k in q for k in ["where is my order", "track my package", "order status", "track order", "has my order shipped", "package location"]):
+        if "order_number" in params or any(k in q for k in ["where is my order", "track my package", "where is my package", "order status", "track order", "has my order shipped", "package location"]):
             return "order_tracking", 0.98, "order_agent"
 
         # 2. Return Request / Eligibility
@@ -137,35 +137,39 @@ class IntentRouterAgent:
                 return "return_request", 0.95, "return_agent"
             return "policy_faq", 0.90, "policy_agent"
 
-        # 3. Price Match Guarantee Action & Coupon Validation
-        if ("price match" in q or "match price" in q) and ("sku" in params or "max_price" in params or "$" in q or any(c in q for c in ["amazon", "best buy", "target", "walmart", "elec-", "appr-", "home-", "at "])):
+        # 3. Policy Inquiries - Price match inquiries like "Do you price match with Amazon or Best Buy?" or general policy questions
+        if any(k in q for k in ["do you price match", "price match policy", "price matching policy", "how does price match", "match prices with", "price match with amazon", "price match with best buy"]):
+            return "policy_faq", 0.96, "policy_agent"
+
+        # 4. Inventory Check - Stock availability, counts, backorders
+        if ("sku" in params and any(k in q for k in ["in stock", "stock", "how many left", "available", "availability", "inventory"])) or any(k in q for k in ["in stock right now", "in stock", "is it in stock", "check stock", "stock count", "how many available", "stock status", "availability"]):
+            return "inventory_check", 0.95, "inventory_agent"
+
+        # 5. Price Match Guarantee Action & Coupon Validation
+        if ("price match" in q or "match price" in q) and ("sku" in params or "competitor_price" in params or "max_price" in params or "₹" in q or "$" in q or any(c in q for c in ["elec-", "appr-", "home-", "at ₹", "at $", "for ₹", "for $"])):
             return "coupon_validation", 0.98, "coupon_agent"
 
-        if "coupon_code" in params or any(k in q for k in ["coupon code", "promo code", "discount code", "validate voucher", "apply coupon"]):
+        if "coupon_code" in params or any(k in q for k in ["coupon", "promo code", "discount code", "voucher", "apply coupon", "use coupon"]):
             return "coupon_validation", 0.95, "coupon_agent"
 
-        # 4. Inventory Check
-        if ("sku" in params and any(k in q for k in ["in stock", "stock", "how many left", "available", "inventory"])) or any(k in q for k in ["is it in stock", "check stock", "stock count", "how many available"]):
-            return "inventory_check", 0.93, "inventory_agent"
+        # 6. Policy Inquiries - Returns, Shipping, Warranty, Price Match FAQ
+        if any(k in q for k in ["policy", "return policy", "warranty", "guarantee", "shipping", "expedited", "delivery", "delivery time", "shipping fee", "how long does shipping", "how much is shipping", "restocking fee", "international shipping", "care+", "coverage", "cover"]):
+            return "policy_faq", 0.95, "policy_agent"
 
-        # 5. Competitor Price Comparison
+        # 7. Competitor Price Comparison
         if any(k in q for k in ["compare price", "price compare", "compare the price", "cheaper on", "price difference", "amazon price", "ebay price", "compare with amazon", "compare with ebay", "prices on amazon"]):
             return "product_search", 0.98, "product_agent"
 
-        # 6. Policy Inquiries
-        if any(k in q for k in ["policy", "return policy", "warranty", "guarantee", "shipping fee", "delivery time", "how long does shipping", "price match policy", "price match", "restocking fee", "international shipping", "care+"]):
-            return "policy_faq", 0.94, "policy_agent"
+        # 8. Product Search & Recommendation
+        if any(k in q for k in ["recommend", "show me", "best", "looking for", "headphones", "earbuds", "laptop", "watch", "shoes", "jacket", "camera", "vacuum", "lamp", "under ₹", "under $", "under rs", "price", "buy", "features", "specs", "cheapest", "product", "item", "catalog"]):
+            return "product_search", 0.93, "product_agent"
 
-        # 7. Product Search & Recommendation
-        if any(k in q for k in ["recommend", "show me", "best", "looking for", "headphones", "earbuds", "laptop", "watch", "shoes", "jacket", "camera", "vacuum", "lamp", "under $", "price", "buy", "features", "specs", "cheapest", "product", "item", "catalog"]):
-            return "product_search", 0.92, "product_agent"
-
-        # 7. Default / Conversational (Greetings, Help, Off-topic, capabilities)
+        # 9. Default / Conversational (Greetings, Help, Off-topic, capabilities)
         if any(k in q for k in ["what can i ask", "what can you do", "who are you", "help", "capabilities", "how do you work", "hi", "hello", "hey", "good morning", "thank", "weather", "write code"]):
             return "general_chat", 0.88, "general_chat_agent"
 
         # Fallback to General Chat if it's purely conversational (no product search keywords or catalog nouns)
-        product_nouns = ["headphone", "earbud", "laptop", "watch", "lamp", "vacuum", "jacket", "shoes", "sneaker", "tablet", "mouse", "keyboard", "led", "lcd", "speaker", "sofa", "bed", "table", "rack", "umbrella", "crockery", "phone", "media player", "suit", "shirt", "jeans", "coat", "apparel", "wear", "car"]
+        product_nouns = ["headphone", "earbud", "laptop", "watch", "lamp", "vacuum", "jacket", "shoes", "sneaker", "tablet", "mouse", "keyboard", "led", "lcd", "speaker", "sofa", "bed", "table", "rack", "umbrella", "crockery", "phone", "media player", "suit", "shirt", "jeans", "coat", "apparel", "wear", "car", "novabook"]
         if not any(noun in q for noun in product_nouns):
             return "general_chat", 0.75, "general_chat_agent"
 

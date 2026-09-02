@@ -49,9 +49,9 @@ class LongTermMemoryManager:
             extracted.append(mem)
 
         # 3. Budget / Price ceiling preference
-        budget_match = re.search(r"(?:my budget is|usually spend under|keep it under)\s*\$?(\d+)", q)
+        budget_match = re.search(r"(?:my budget is|usually spend under|keep it under)\s*(?:₹|rs\.?|inr|\$)?\s*(\d+)", q)
         if budget_match:
-            budget_val = f"${budget_match.group(1)}"
+            budget_val = f"₹{budget_match.group(1)}"
             mem = self.save_preference(
                 user_id=user_id,
                 session_id=session_id,

@@ -12,9 +12,9 @@ ShopMate guarantees the lowest price on all identical in-stock merchandise.
 2. PROMOTIONAL COUPON CODES & VOUCHERS
 - Only one promotional coupon code can be applied per order unless explicitly stated in multi-voucher campaign promotions.
 - Active Standard Coupons:
-  * 'SAVE20': 20% off all orders with minimum subtotal of $50. Max discount $100.
-  * 'FREESHIP': Free expedited 2-day shipping on orders over $35.
+  * 'SAVE20': 20% off all orders with minimum subtotal of ₹50. Max discount ₹100.
+  * 'FREESHIP': Free expedited 2-day shipping on orders over ₹35.
   * 'VIP10': 10% off storewide for registered members with no minimum purchase requirement.
-  * 'TECH50': $50 flat discount on premium audio and laptops with cart value above $300.
+  * 'TECH50': ₹50 flat discount on premium audio and laptops with cart value above ₹300.
 - Coupons cannot be applied retroactively to orders that have already been shipped or completed.
 - Coupons cannot be redeemed for cash or transferred to another account.

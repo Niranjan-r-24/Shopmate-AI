@@ -193,6 +193,23 @@ def tool_check_inventory(sku_or_name: str) -> Dict[str, Any]:
                 (Product.name.ilike(f"%{query_str}%")) | (Product.sku.ilike(f"%{query_str}%"))
             ).first()
 
+        # Clean natural language wrappers (e.g. 'Is NovaBook Pro 15.6 in stock right now?')
+        if not product:
+            clean_name = re.sub(r"^(?:is|are|do you have|check\s+(?:stock\s+for|inventory\s+for)?|what\s+is\s+the\s+stock\s+of)\s+", "", query_str, flags=re.IGNORECASE)
+            clean_name = re.sub(r"\b(?:in\s+stock(?:\s+right\s+now)?|available|right\s+now|currently|in\s+inventory)\b", "", clean_name, flags=re.IGNORECASE).strip(" ?.,")
+            if clean_name:
+                product = db.query(Product).filter(
+                    (Product.name.ilike(f"%{clean_name}%")) | (Product.sku.ilike(f"%{clean_name}%"))
+                ).first()
+
+        # Try key distinctive tokens
+        if not product:
+            tokens = [t for t in re.split(r"[\s\-_]+", query_str) if len(t) >= 4 and t.lower() not in ["stock", "right", "what", "check", "available", "inventory", "with", "have"]]
+            for t in tokens:
+                product = db.query(Product).filter(Product.name.ilike(f"%{t}%")).first()
+                if product:
+                    break
+
         if not product:
             return {
                 "status": "not_found",
@@ -315,7 +332,7 @@ def tool_check_return_eligibility(
             "eligible": True,
             "return_authorization_id": ret_id,
             "order_number": order.order_number,
-            "refund_estimate": f"${order.total_amount:.2f}",
+            "refund_estimate": f"₹{order.total_amount:.2f}",
             "instructions": "A prepaid FedEx return shipping label has been generated. Pack items in original box and drop off at any authorized FedEx hub.",
             "return_window_days_remaining": max_days - days_since_order
         }
@@ -347,7 +364,7 @@ def tool_validate_coupon(code: str, cart_total: float = 0.0) -> Dict[str, Any]:
                 "valid": False,
                 "code": clean_code,
                 "min_order_value": coupon.min_order_value,
-                "message": f"Coupon '{clean_code}' requires a minimum cart subtotal of ${coupon.min_order_value:.2f} (current cart: ${cart_total:.2f})."
+                "message": f"Coupon '{clean_code}' requires a minimum cart subtotal of ₹{coupon.min_order_value:.2f} (current cart: ₹{cart_total:.2f})."
             }
 
         # Calculate discount
@@ -358,7 +375,7 @@ def tool_validate_coupon(code: str, cart_total: float = 0.0) -> Dict[str, Any]:
             discount_desc = f"{coupon.discount_value}% Off"
         else:
             discount_amount = min(coupon.discount_value, cart_total) if cart_total > 0 else coupon.discount_value
-            discount_desc = f"${coupon.discount_value:.2f} Off"
+            discount_desc = f"₹{coupon.discount_value:.2f} Off"
 
         final_total = max(0.0, cart_total - discount_amount) if cart_total > 0 else 0.0
 
@@ -394,6 +411,7 @@ def tool_search_policy(query: str, top_k: int = 3) -> Dict[str, Any]:
     for item in reranked:
         meta = item.get("metadata", {})
         citations.append({
+            "id": item.get("id", ""),
             "source": meta.get("source", "store_policy.txt"),
             "title": meta.get("title", "Store Policy"),
             "policy_type": meta.get("policy_type", "general"),
@@ -732,18 +750,17 @@ def tool_compare_product_prices(query: str, sku: Optional[str] = None) -> Dict[s
                 "eligible_for_price_match": False
             })
 
-        # Determine best action
-        action_recommendation = "ShopMate offers the best verified price & direct warranty."
         price_match_available = False
         potential_savings = 0.0
+        action_recommendation = "ShopMate offers official manufacturer warranty and 30-day VIP returns."
 
         for comp in comparisons:
             if comp.get("eligible_for_price_match"):
                 price_match_available = True
                 potential_savings = max(potential_savings, comp["price_difference"])
                 action_recommendation = (
-                    f"Found a lower verified price on {comp['competitor']} (${comp['price']:.2f}). "
-                    f"You can price-match to save ${comp['price_difference']:.2f} instantly!"
+                    f"Found a lower verified price on {comp['competitor']} (₹{comp['price']:.2f}). "
+                    f"You can price-match to save ₹{comp['price_difference']:.2f} instantly!"
                 )
 
         return {
@@ -751,8 +768,6 @@ def tool_compare_product_prices(query: str, sku: Optional[str] = None) -> Dict[s
             "query": search_query,
             "shopmate_product": shopmate_info,
             "competitors": comparisons,
-            "amazon_results_count": len(amazon_products),
-            "ebay_results_count": len(ebay_products),
             "price_match_available": price_match_available,
             "max_potential_savings": round(potential_savings, 2),
             "recommended_action": action_recommendation
@@ -782,7 +797,7 @@ def tool_apply_price_match(
         if competitor_price <= 0 or competitor_price >= product.price:
             return {
                 "status": "not_applicable",
-                "message": f"Competitor price (${competitor_price:.2f}) must be lower than ShopMate regular price (${product.price:.2f})."
+                "message": f"Competitor price (₹{competitor_price:.2f}) must be lower than ShopMate regular price (₹{product.price:.2f})."
             }
 
         # Calculate exact discount to match price
@@ -797,7 +812,7 @@ def tool_apply_price_match(
             max_discount=discount_amount,
             is_active=True,
             expiry_date=datetime.utcnow() + timedelta(days=14),
-            description=f"Price Match Guarantee: Matched {competitor_name} price of ${competitor_price:.2f} for SKU {product.sku}"
+            description=f"Price Match Guarantee: Matched {competitor_name} price of ₹{competitor_price:.2f} for SKU {product.sku}"
         )
         db.add(new_coupon)
         db.commit()
@@ -812,9 +827,7 @@ def tool_apply_price_match(
             "matched_price": competitor_price,
             "savings_amount": discount_amount,
             "competitor": competitor_name,
-            "message": f"Price match approved! Use coupon code '{coupon_code}' at checkout to get {product.name} for ${competitor_price:.2f} (Save ${discount_amount:.2f})."
+            "message": f"Price match approved! Use coupon code '{coupon_code}' at checkout to get {product.name} for ₹{competitor_price:.2f} (Save ₹{discount_amount:.2f})."
         }
     finally:
         db.close()
-
-
