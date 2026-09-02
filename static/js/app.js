@@ -244,6 +244,18 @@ const App = {
   closeAiConcierge() {
     const modal = document.getElementById('modal-ai-concierge');
     if (modal) modal.classList.remove('active');
+    this.toggleAiSidebar(false);
+  },
+
+  toggleAiSidebar(forceState) {
+    const drawer = document.getElementById('ai-sidebar-drawer');
+    if (!drawer) return;
+    if (typeof forceState === 'boolean') {
+      if (forceState) drawer.classList.add('active');
+      else drawer.classList.remove('active');
+    } else {
+      drawer.classList.toggle('active');
+    }
   },
 
   switchAiTab(tabName) {

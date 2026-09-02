@@ -44,6 +44,17 @@ class InventoryAgent:
                     f"Would you like me to notify you when this item is restocked, or recommend an in-stock alternative?"
                 )
             
+            product_cards = [{
+                "id": f"prod_{sku_found}",
+                "sku": sku_found,
+                "name": name,
+                "price": price,
+                "stock_count": stock,
+                "in_stock": in_stock,
+                "rating": tool_res.get("rating", 4.8),
+                "image_url": tool_res.get("image_url", "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=500"),
+                "category": tool_res.get("category", "Electronics")
+            }]
             retrieved_chunks = [{
                 "id": f"prod_{sku_found}",
                 "content": f"Product: {name} | SKU: {sku_found} | Price: ₹{price:.2f} | Stock: {stock} | In Stock: {in_stock}",
@@ -53,6 +64,7 @@ class InventoryAgent:
         else:
             response_text = f"I couldn't locate inventory records for '{sku}'. Please verify the product SKU (e.g. `ELEC-1001`) or product name."
             retrieved_chunks = []
+            product_cards = []
 
         duration_ms = (time.time() - start_time) * 1000.0
 
@@ -70,6 +82,7 @@ class InventoryAgent:
         }
 
         return {
+            "product_cards": product_cards,
             "retrieved_chunks": retrieved_chunks,
             "reranked_chunks": retrieved_chunks,
             "tool_calls": state.get("tool_calls", []) + [{

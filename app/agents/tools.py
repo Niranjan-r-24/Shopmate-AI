@@ -231,7 +231,10 @@ def tool_check_inventory(sku_or_name: str) -> Dict[str, Any]:
             "in_stock": in_stock,
             "availability_status": status_msg,
             "restock_estimate": restock_date,
-            "warehouse_location": "Main Distribution Center (Seattle Hub)" if in_stock else "Pending Supplier Shipment"
+            "warehouse_location": "Main Distribution Center (Seattle Hub)" if in_stock else "Pending Supplier Shipment",
+            "image_url": product.image_url,
+            "rating": product.rating,
+            "category": product.category
         }
     finally:
         db.close()

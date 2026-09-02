@@ -55,8 +55,9 @@ class QueryRewriter:
         # Clean noise words while preserving retail search intents
         clean = re.sub(r"^(hey|hi|hello|please tell me|can you show me|i want to know|tell me about)\s+", "", expanded, flags=re.IGNORECASE)
         
-        # Inject user preference hints if relevant (e.g. brand, size, budget)
-        if user_preferences:
+        # Inject user preference hints if relevant for product search queries only
+        is_meta_or_tool = any(k in clean.lower() for k in ["preference", "memory", "tools lab", "tool lab", "evaluation", "analytics", "benchmark", "who are you", "what can you do", "help", "where is my order", "track", "return", "coupon", "voucher", "in stock", "stock count"])
+        if user_preferences and not is_meta_or_tool:
             for pref in user_preferences:
                 key = pref.get("key", "").lower()
                 val = pref.get("value", "")

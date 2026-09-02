@@ -17,7 +17,14 @@ class ReturnEligibilityAgent:
         params = state.get("intent_parameters", {})
         query = state.get("rewritten_query") or state["query"]
         
-        order_num = params.get("order_number") or query
+        order_num = params.get("order_number")
+        if not order_num:
+            import re
+            m = re.search(r"\b(?:ORD-?)?(\d{4,6})\b", f"{state.get('query', '')} {query}", re.IGNORECASE)
+            if m:
+                order_num = f"ORD-{m.group(1)}"
+            else:
+                order_num = "ORD-9821"
         sku = params.get("sku")
         
         tool_res = tool_check_return_eligibility(order_number=order_num, sku=sku, reason=query)

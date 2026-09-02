@@ -1038,26 +1038,70 @@ button, input, select, textarea {
   background: transparent;
   border: none;
   color: #4b5563;
-  padding: 6px 14px;
+  padding: 8px 14px;
   border-radius: var(--radius-sm);
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 500;
   cursor: pointer;
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 10px;
   transition: var(--transition);
+  text-align: left;
+  width: 100%;
 }
 
 .ai-tab-btn:hover {
   color: #111827;
-  background: #e5e7eb;
+  background: #f3f4f6;
 }
 
 .ai-tab-btn.active {
   background: #1e1b4b;
   color: #fff;
   font-weight: 600;
+}
+
+/* AI Sidebar Drawer (3-dot dropdown / slideout) */
+.ai-sidebar-drawer {
+  position: absolute;
+  top: 0;
+  right: -320px;
+  width: 290px;
+  height: 100%;
+  background: #ffffff;
+  border-left: 1px solid #e5e7eb;
+  box-shadow: -6px 0 24px rgba(0, 0, 0, 0.12);
+  z-index: 200;
+  display: flex;
+  flex-direction: column;
+  transition: right 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.ai-sidebar-drawer.active {
+  right: 0;
+}
+
+.ai-sidebar-header {
+  padding: 16px 20px;
+  border-bottom: 1px solid #e5e7eb;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #f9fafb;
+}
+
+.ai-sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 14px;
+  overflow-y: auto;
+}
+
+.ai-three-dots-btn:hover {
+  background: #e5e7eb !important;
+  color: #000000 !important;
 }
 
 .ai-modal-body {

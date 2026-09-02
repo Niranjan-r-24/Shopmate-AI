@@ -76,8 +76,23 @@ class CouponValidationAgent:
                     "execution_trace": state.get("execution_trace", []) + [trace_step]
                 }
 
-        code = params.get("coupon_code") or query
-        cart_total = float(params.get("cart_total", 1000.0))  # Default sample cart ₹1000 if unspecified
+        code = params.get("coupon_code")
+        if not code:
+            import re
+            m = re.search(r"\b(SAVE20|FREESHIP|VIP10|TECH50|DISCOUNT15|PRICEMATCH|[A-Z0-9]{4,10})\b", f"{raw_query} {query}", re.IGNORECASE)
+            if m:
+                code = m.group(1).upper()
+            else:
+                code = "SAVE20"
+
+        cart_total = float(params.get("cart_total", 0.0))
+        if cart_total <= 0:
+            import re
+            cart_m = re.search(r"(?:₹|rs\.?|inr|\$|order\s+of|cart\s+of|on\s+a\s*)\s*(\d+(?:\.\d{2})?)", f"{raw_query} {query}", re.IGNORECASE)
+            if cart_m:
+                cart_total = float(cart_m.group(1))
+            else:
+                cart_total = 12000.0  # Default ₹12000 if not specified
         
         tool_res = tool_validate_coupon(code=code, cart_total=cart_total)
         coupon_card = None

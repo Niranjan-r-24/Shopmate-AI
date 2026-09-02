@@ -499,32 +499,48 @@
           <div class="avatar assistant-avatar"><i class="fa-solid fa-robot"></i></div>
           <div>
             <h2>ShopMate AI Concierge</h2>
-            <p><i class="fa-solid fa-diagram-project"></i> LangGraph Multi-Agent • Dual Memory • Chroma Hybrid RAG</p>
+            <p><i class="fa-solid fa-diagram-project"></i> Autonomous Retail Intelligence • Multi-Agent Assistant</p>
           </div>
         </div>
 
-        <!-- AI Navigation Tabs -->
-        <div class="ai-tab-nav">
-          <button class="ai-tab-btn active" id="ai-tab-btn-chat" data-aitab="chat">
-            <i class="fa-solid fa-comments"></i> Assistant Chat
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <button class="icon-btn ai-three-dots-btn" id="btn-ai-sidebar-toggle" onclick="App.toggleAiSidebar()" title="More AI Features (4-Way RAG, Memory, Analytics, Tools Lab)" style="background: #f3f4f6; color: #111827; width: 36px; height: 36px; border-radius: 8px; font-size: 14px; border: 1px solid #e5e7eb; cursor: pointer;">
+            <i class="fa-solid fa-ellipsis-vertical"></i>
           </button>
-          <button class="ai-tab-btn" id="ai-tab-btn-rag" data-aitab="rag">
-            <i class="fa-solid fa-layer-group"></i> 4-Way RAG Hub
-          </button>
-          <button class="ai-tab-btn" id="ai-tab-btn-memory" data-aitab="memory">
-            <i class="fa-solid fa-user-gear"></i> Memory (<span id="ai-memory-username">Niranjan R</span>)
-          </button>
-          <button class="ai-tab-btn" id="ai-tab-btn-analytics" data-aitab="analytics">
-            <i class="fa-solid fa-chart-pie"></i> Evaluation & Analytics
-          </button>
-          <button class="ai-tab-btn" id="ai-tab-btn-tools" data-aitab="tools">
-            <i class="fa-solid fa-screwdriver-wrench"></i> Tools Lab
+          <button class="icon-btn close-modal" style="color: #374151; background: rgba(0, 0, 0, 0.05); width: 36px; height: 36px; border-radius: 8px; cursor: pointer;" onclick="App.closeAiConcierge()">
+            <i class="fa-solid fa-xmark"></i>
           </button>
         </div>
+      </div>
 
-        <button class="icon-btn close-modal" style="color: #374151; background: rgba(0, 0, 0, 0.05);" onclick="App.closeAiConcierge()">
-          <i class="fa-solid fa-xmark"></i>
-        </button>
+      <!-- AI Features Sidebar Drawer (Accessible via 3-dots) -->
+      <div id="ai-sidebar-drawer" class="ai-sidebar-drawer">
+        <div class="ai-sidebar-header">
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <i class="fa-solid fa-layer-group" style="color: #4f46e5;"></i>
+            <span style="font-size: 13.5px; font-weight: 700; color: #111827;">AI Features Hub</span>
+          </div>
+          <button class="icon-btn" onclick="App.toggleAiSidebar(false)" style="width: 28px; height: 28px; font-size: 12px; background: transparent; color: #6b7280; cursor: pointer;">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </div>
+        <div class="ai-sidebar-nav">
+          <button class="ai-tab-btn active" id="ai-tab-btn-chat" data-aitab="chat" onclick="App.switchAiTab('chat'); App.toggleAiSidebar(false);">
+            <i class="fa-solid fa-comments"></i> <span>Assistant Chat</span>
+          </button>
+          <button class="ai-tab-btn" id="ai-tab-btn-rag" data-aitab="rag" onclick="App.switchAiTab('rag'); App.toggleAiSidebar(false);">
+            <i class="fa-solid fa-layer-group"></i> <span>4-Way RAG Hub</span>
+          </button>
+          <button class="ai-tab-btn" id="ai-tab-btn-memory" data-aitab="memory" onclick="App.switchAiTab('memory'); App.toggleAiSidebar(false);">
+            <i class="fa-solid fa-user-gear"></i> <span>Memory Profile</span>
+          </button>
+          <button class="ai-tab-btn" id="ai-tab-btn-analytics" data-aitab="analytics" onclick="App.switchAiTab('analytics'); App.toggleAiSidebar(false);">
+            <i class="fa-solid fa-chart-pie"></i> <span>Evaluation & Analytics</span>
+          </button>
+          <button class="ai-tab-btn" id="ai-tab-btn-tools" data-aitab="tools" onclick="App.switchAiTab('tools'); App.toggleAiSidebar(false);">
+            <i class="fa-solid fa-screwdriver-wrench"></i> <span>Tools Lab</span>
+          </button>
+        </div>
       </div>
 
       <!-- AI Modal Body -->

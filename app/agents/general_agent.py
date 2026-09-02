@@ -37,8 +37,53 @@ class GeneralChatAgent:
         if not response_text or response_text.startswith("RESPONSE_FALLBACK"):
             q_lower = query.lower()
             
-            # --- 1. TOOLS LAB INQUIRIES ---
-            if any(k in q_lower for k in ["tool lab", "tools lab", "tool registry", "tools registry", "deterministic tools", "what tools", "how does tool", "available tools", "inventory tool", "coupon tool", "price match tool"]):
+            # --- 1. DIRECT USER PREFERENCE LOOKUP (NO ARCHITECTURE ESSAY) ---
+            if any(k in q_lower for k in ["preference", "preferences", "my preference", "my preferences", "what is in my memory", "show my memory", "show preferences", "view memory", "stored memory", "my saved preference"]):
+                if user_prefs:
+                    prefs_list = ""
+                    for idx, p in enumerate(user_prefs[:5], 1):
+                        category = p.get("category", "General").capitalize()
+                        key = p.get("key", "").replace("preferred_brand_", "Brand: ").replace("_", " ").title()
+                        val = p.get("value", "")
+                        prefs_list += f"{idx}. **{key}** ({category}): `{val}`\n"
+                    
+                    response_text = (
+                        f"🧠 **Your Active Memory Profile ({len(user_prefs[:5])}/5 Preferences Stored):**\n\n"
+                        f"{prefs_list}\n"
+                        f"💡 *ShopMate AI uses these preferences to automatically filter sizes, favorite brands, and budgets. "
+                        f"You can add or update preferences anytime (e.g., 'I prefer Sony', 'My shoe size is 10.5', 'My budget is ₹15000')!*"
+                    )
+                else:
+                    response_text = (
+                        "🧠 **Your Active Memory Profile (0/5 Preferences Stored):**\n\n"
+                        "You don't have any preferences stored yet.\n\n"
+                        "💡 **How to add preferences:** Simply tell me in the chat:\n"
+                        "- *'I prefer Sony headphones'*\n"
+                        "- *'My shoe size is 10.5'* / *'My shirt size is L'*\n"
+                        "- *'My budget is ₹15000'*\n"
+                        "- *'I prefer black sneakers'*\n\n"
+                        "I will store up to 5 preferences in your profile and customize your recommendations automatically!"
+                    )
+
+            # --- 2. MEMORY SYSTEM ARCHITECTURE (ONLY WHEN EXPLICITLY ASKED) ---
+            elif any(k in q_lower for k in ["how does memory work", "memory architecture", "explain memory", "short-term memory", "long-term memory", "short term memory", "long term memory"]):
+                response_text = (
+                    "🧠 **ShopMate AI — Dual-Layer Memory Architecture**\n\n"
+                    "ShopMate AI features an enterprise dual-tier memory system designed for hyper-personalized shopping:\n\n"
+                    "1. **⚡ Short-Term Session Memory:**\n"
+                    "   - Maintains a sliding conversational context window per session ID.\n"
+                    "   - Powers **Contextual Query Rewriting** (resolving pronouns like *'show me the second one in black'*).\n"
+                    "   - Stored in memory with fast REST access via `/api/chat/history`.\n\n"
+                    "2. **🏛️ Long-Term Semantic & Preference Memory:**\n"
+                    "   - **Automatic Extraction:** Heuristically and semantically extracts sizes (shoes, shirts), favorite brands (e.g. Sony, Nike), and typical price ceilings from natural conversation.\n"
+                    "   - **Dual Storage:** Persists structured records in SQLite (`UserMemory` table) and indexes 384-dimensional dense vectors in ChromaDB (`user_memories` collection).\n"
+                    "   - **Capacity:** Stores up to 5 active preferences per customer with FIFO updates.\n"
+                    "   - **Context Injection:** Injected directly into the LangGraph state machine on every query to personalize search filtering.\n"
+                    "   - **User Control:** Viewable and clearable via the **Memory** tab."
+                )
+
+            # --- 3. TOOLS LAB INQUIRIES ---
+            elif any(k in q_lower for k in ["tool lab", "tools lab", "tool registry", "tools registry", "deterministic tools", "what tools are in", "available tools in tools lab", "list tools"]):
                 response_text = (
                     "🛠️ **ShopMate AI — Deterministic Tools Lab Registry**\n\n"
                     "The **Tools Lab** provides a high-performance, deterministic execution engine with 10 production-grade tools:\n\n"
@@ -54,40 +99,7 @@ class GeneralChatAgent:
                     "| **Price Comparison**| `/api/tools/compare-prices` | Side-by-side Amazon vs eBay vs Store prices| `query`, `sku` |\n"
                     "| **Apply Price Match**| `/api/tools/apply-price-match` | Automatic discount coupon for lower competitor price | `sku`, `competitor_name`, `competitor_price` |\n"
                     "| **Product Search** | `/api/tools/search-products` | Catalog search with category/budget filters | `query`, `category`, `max_price` |\n\n"
-                    "💡 *You can test any of these tools directly in the **Tools Lab** tab in the top navigation bar with live payloads!*"
-                )
-            
-            # --- 2. MEMORY SUBSYSTEM & PREFERENCES ---
-            elif any(k in q_lower for k in ["memory", "preference", "saved preference", "shoe size in memory", "brand preference", "what is in my memory", "show my memory", "view memory"]):
-                # Build active preferences string if available
-                prefs_summary = ""
-                if user_prefs:
-                    prefs_summary = "\n\n📌 **Your Currently Stored Long-Term Preferences:**\n"
-                    for p in user_prefs:
-                        category = p.get("category", "general").capitalize()
-                        key = p.get("key", "").replace("_", " ").title()
-                        val = p.get("value", "")
-                        prefs_summary += f"- **{category} ({key}):** `{val}`\n"
-                else:
-                    prefs_summary = (
-                        "\n\n📌 **Your Memory Status:** No custom preferences stored in this session yet. "
-                        "Try telling me: *'I prefer Sony headphones'*, *'My shoe size is 10.5'*, or *'My budget is ₹15000'* "
-                        "and I will automatically remember it!"
-                    )
-
-                response_text = (
-                    "🧠 **ShopMate AI — Dual-Layer Memory Architecture**\n\n"
-                    "ShopMate AI features an enterprise dual-tier memory system designed for hyper-personalized shopping:\n\n"
-                    "1. **⚡ Short-Term Session Memory:**\n"
-                    "   - Maintains a sliding conversational context window per session ID.\n"
-                    "   - Powers **Contextual Query Rewriting** (resolving pronouns like *'show me the second one in black'*).\n"
-                    "   - Stored in memory with fast REST access via `/api/chat/history`.\n\n"
-                    "2. **🏛️ Long-Term Semantic & Preference Memory:**\n"
-                    "   - **Automatic Extraction:** Heuristically and semantically extracts sizes (shoes, shirts), favorite brands (e.g. Sony, Nike), and typical price ceilings from natural conversation.\n"
-                    "   - **Dual Storage:** Persists structured records in SQLite (`UserMemory` table) and indexes 384-dimensional dense vectors in ChromaDB (`user_memories` collection).\n"
-                    "   - **Context Injection:** Injected directly into the LangGraph state machine on every query to personalize search filtering.\n"
-                    "   - **User Control:** Viewable and clearable via the **Memory** tab."
-                    f"{prefs_summary}"
+                    "💡 *You can test any of these tools directly in the **Tools Lab** sidebar tab or ask me directly in chat (e.g. 'Is ELEC-1001 in stock?', 'Where is order ORD-9821?', 'Validate coupon SAVE20')!*"
                 )
 
             # --- 3. 4-WAY RAG HUB ---
