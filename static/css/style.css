@@ -2120,4 +2120,38 @@ footer {
   background: #f8fafc;
 }
 
+/* Benchmark Run Suite Button */
+.btn-run-suite, #btn-run-benchmark {
+  background-color: #000000 !important;
+  color: #ffffff !important;
+  border: 1px solid #000000 !important;
+  border-radius: 6px !important;
+  padding: 7px 16px !important;
+  font-size: 12px !important;
+  font-weight: 600 !important;
+  cursor: pointer !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  transition: all 0.2s ease !important;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.btn-run-suite:hover, #btn-run-benchmark:hover {
+  background-color: #1f2937 !important;
+  border-color: #1f2937 !important;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.25);
+}
+
+.btn-run-suite:active, #btn-run-benchmark:active {
+  transform: translateY(0);
+}
+
+.btn-run-suite:disabled, #btn-run-benchmark:disabled {
+  background-color: #374151 !important;
+  opacity: 0.8 !important;
+  cursor: not-allowed !important;
+}
+
 

@@ -164,7 +164,24 @@ class IntentRouterAgent:
         if any(k in q for k in ["recommend", "show me", "best", "looking for", "headphones", "earbuds", "laptop", "watch", "shoes", "jacket", "camera", "vacuum", "lamp", "under ₹", "under $", "under rs", "price", "buy", "features", "specs", "cheapest", "product", "item", "catalog"]):
             return "product_search", 0.93, "product_agent"
 
-        # 9. Default / Conversational (Greetings, Help, Off-topic, capabilities)
+        # 9. System Knowledge & Feature Inquiries (Tools Lab, Memory, 4-Way RAG Hub, Evaluation & Analytics, Architecture)
+        if any(k in q for k in [
+            "tools lab", "tool lab", "tools registry", "tool registry", "deterministic tools",
+            "what tools", "how does tool", "available tools", "inventory tool", "coupon tool",
+            "memory", "long-term memory", "long term memory", "short-term memory", "short term memory",
+            "user memory", "preferences", "saved preferences", "preference profile", "shoe size in memory",
+            "what is in my memory", "show my memory", "show preferences", "view memory", "clear memory",
+            "4 way rag", "4-way rag", "rag hub", "rag", "retrieval augmented generation", "hybrid search",
+            "bm25", "dense vector", "chromadb", "dense search", "sparse search", "reranker", "cross-encoder",
+            "cross encoder", "rrf", "reciprocal rank fusion", "document ingestion", "ingest file", "ingest policy",
+            "evaluation", "analytics", "benchmark", "benchmark suite", "golden benchmark", "golden dataset",
+            "precision@k", "precision@3", "recall@k", "recall@3", "mrr", "mean reciprocal rank",
+            "routing accuracy", "telemetry", "latency breakdown", "critic groundedness", "run suite",
+            "architecture", "system architecture", "tech stack", "langgraph workflow", "multi-agent architecture"
+        ]):
+            return "general_chat", 0.99, "general_chat_agent"
+
+        # 10. Default / Conversational (Greetings, Help, Off-topic, capabilities)
         if any(k in q for k in ["what can i ask", "what can you do", "who are you", "help", "capabilities", "how do you work", "hi", "hello", "hey", "good morning", "thank", "weather", "write code"]):
             return "general_chat", 0.88, "general_chat_agent"
 
