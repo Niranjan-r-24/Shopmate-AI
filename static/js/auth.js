@@ -3,10 +3,15 @@
  */
 const Auth = {
   tokenKey: 'shopmate_jwt_token',
+  refreshTokenKey: 'shopmate_refresh_token',
   userKey: 'shopmate_user_profile',
 
   getToken() {
     return localStorage.getItem(this.tokenKey);
+  },
+
+  getRefreshToken() {
+    return localStorage.getItem(this.refreshTokenKey);
   },
 
   getUser() {
@@ -22,19 +27,11 @@ const Auth = {
     return !!(this.getToken() && this.getUser());
   },
 
-  fillCredentials(username, password, autoSubmit = false) {
-    const uInput = document.getElementById('auth-username');
-    const pInput = document.getElementById('auth-password');
-    if (uInput) uInput.value = username;
-    if (pInput) pInput.value = password;
-    if (autoSubmit) {
-      const form = document.getElementById('auth-form');
-      if (form) form.requestSubmit();
-    }
-  },
-
-  setAuth(token, user) {
+  setAuth(token, user, refreshToken = null) {
     localStorage.setItem(this.tokenKey, token);
+    if (refreshToken) {
+      localStorage.setItem(this.refreshTokenKey, refreshToken);
+    }
     localStorage.setItem(this.userKey, JSON.stringify(user));
     this.updateUI();
     this.applyRolePermissions();
@@ -45,6 +42,7 @@ const Auth = {
 
   clearAuth() {
     localStorage.removeItem(this.tokenKey);
+    localStorage.removeItem(this.refreshTokenKey);
     localStorage.removeItem(this.userKey);
     sessionStorage.removeItem('shopmate_signed_in_session');
     window.location.href = '/login?logout=true';
@@ -53,6 +51,34 @@ const Auth = {
   getAuthHeaders() {
     const token = this.getToken();
     return token ? { 'Authorization': `Bearer ${token}` } : {};
+  },
+
+  async refreshToken() {
+    const refToken = this.getRefreshToken();
+    if (!refToken) {
+      this.clearAuth();
+      return null;
+    }
+    try {
+      const res = await fetch('/api/auth/refresh', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ refresh_token: refToken })
+      });
+      if (!res.ok) {
+        this.clearAuth();
+        return null;
+      }
+      const data = await res.json();
+      localStorage.setItem(this.tokenKey, data.access_token);
+      if (data.refresh_token) {
+        localStorage.setItem(this.refreshTokenKey, data.refresh_token);
+      }
+      return data.access_token;
+    } catch {
+      this.clearAuth();
+      return null;
+    }
   },
 
   applyRolePermissions() {
@@ -134,7 +160,7 @@ const Auth = {
 
   updateUI() {
     const user = this.getUser() || { username: 'Guest', full_name: 'Sign In', role: 'guest' };
-    const displayName = user.full_name || user.username;
+    const displayName = user.full_name || user.username || 'Account';
     
     const label = document.getElementById('auth-username-label');
     const topBarUser = document.getElementById('topbar-user-label');
@@ -145,7 +171,7 @@ const Auth = {
     const prefUserBadge = document.getElementById('pref-user-badge');
 
     if (label) {
-      label.textContent = `${displayName} (${user.role.toUpperCase()})`;
+      label.textContent = `${displayName} (${(user.role || 'GUEST').toUpperCase()})`;
     }
     if (topBarUser) {
       topBarUser.textContent = displayName;
@@ -154,7 +180,7 @@ const Auth = {
       modalActive.textContent = displayName;
     }
     if (modalActiveRole) {
-      modalActiveRole.textContent = user.role.toUpperCase();
+      modalActiveRole.textContent = (user.role || '').toUpperCase();
     }
     if (modalAddMem) {
       modalAddMem.textContent = displayName;
@@ -169,7 +195,7 @@ const Auth = {
 
   checkAuthGate(force = false) {
     if (!this.isLoggedIn() || force) {
-      if (window.location.pathname !== '/login') {
+      if (window.location.pathname !== '/login' && window.location.pathname !== '/signup') {
         window.location.href = '/login';
       }
     }
@@ -179,67 +205,6 @@ const Auth = {
     this.updateUI();
     this.applyRolePermissions();
     this.checkAuthGate();
-    
-    // Auth Modal trigger
-    const trigger = document.getElementById('btn-auth-trigger');
-    const modal = document.getElementById('modal-auth');
-    const form = document.getElementById('auth-form');
-
-    if (trigger && modal) {
-      trigger.addEventListener('click', (e) => {
-        e.preventDefault();
-        modal.classList.add('active');
-      });
-    }
-
-    if (form) {
-      form.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const username = document.getElementById('auth-username').value.trim();
-        const password = document.getElementById('auth-password').value.trim();
-
-        try {
-          const res = await fetch('/api/auth/login', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ username, password })
-          });
-
-          if (!res.ok) {
-            const err = await res.json();
-            throw new Error(err.detail || 'Login failed');
-          }
-
-          const data = await res.json();
-          sessionStorage.setItem('shopmate_signed_in_session', 'true');
-          this.setAuth(data.access_token, data.user);
-          modal.classList.remove('active', 'auth-gate-active');
-          form.reset();
-
-          // Reset chat session to clear state for the newly logged-in user
-          if (window.Chat) {
-            window.Chat.sessionId = 'session_' + Math.random().toString(36).substring(2, 9);
-            const msgContainer = document.getElementById('chat-messages');
-            if (msgContainer) {
-              msgContainer.innerHTML = `
-                <div id="chat-empty-state" class="custom-empty-state">
-                  <p style="text-align: center; color: var(--text-muted); font-size: 14px;">No messages yet. Ask me anything about products, price matching, or policies.</p>
-                </div>
-              `;
-            }
-          }
-
-          // Reload long-term memory
-          if (window.MemoryManager) {
-            window.MemoryManager.loadPreferences();
-          }
-
-          window.App.showToast(`Welcome ${data.user.full_name || data.user.username}! Signed in as ${data.user.role.toUpperCase()}`, 'success');
-        } catch (err) {
-          window.App.showToast(err.message, 'error');
-        }
-      });
-    }
   }
 };
 

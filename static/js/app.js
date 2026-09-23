@@ -136,15 +136,15 @@ const App = {
 
         try {
           const user = window.Auth ? window.Auth.getUser() : null;
-          const username = (user && user.username) ? user.username : 'niranjan';
+          const identifier = (user && (user.username || user.email)) ? (user.username || user.email) : 'default';
 
-          const res = await fetch(`/api/memory/${username}`, {
+          const res = await fetch(`/api/memory/${encodeURIComponent(identifier)}`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
               ...(window.Auth ? window.Auth.getAuthHeaders() : {})
             },
-            body: JSON.stringify({ category: cat, key, value: val })
+            body: JSON.stringify({ category: cat, key, value: val, session_id: window.Chat ? window.Chat.sessionId : 'default_session' })
           });
 
           if (!res.ok) throw new Error('Failed to save preference');
@@ -175,10 +175,10 @@ const App = {
     if (!list) return;
 
     const user = window.Auth ? window.Auth.getUser() : null;
-    const username = (user && user.username) ? user.username : 'niranjan';
+    const identifier = (user && (user.username || user.email)) ? (user.username || user.email) : 'default';
 
     try {
-      const res = await fetch(`/api/memory/${username}`, {
+      const res = await fetch(`/api/memory/${encodeURIComponent(identifier)}`, {
         headers: window.Auth ? window.Auth.getAuthHeaders() : {}
       });
       if (!res.ok) throw new Error('Failed to load');
@@ -213,10 +213,10 @@ const App = {
 
   async deleteHomePreference(key) {
     const user = window.Auth ? window.Auth.getUser() : null;
-    const username = (user && user.username) ? user.username : 'niranjan';
+    const identifier = (user && (user.username || user.email)) ? (user.username || user.email) : 'default';
 
     try {
-      const res = await fetch(`/api/memory/${username}/${encodeURIComponent(key)}`, {
+      const res = await fetch(`/api/memory/${encodeURIComponent(identifier)}/${encodeURIComponent(key)}`, {
         method: 'DELETE',
         headers: window.Auth ? window.Auth.getAuthHeaders() : {}
       });
@@ -294,12 +294,12 @@ const App = {
       return;
     }
     if (code === 'SAVE20') {
-      document.getElementById('cart-subtotal-display').textContent = '$159.99 (20% Off)';
-      this.showToast('Promo code SAVE20 applied! Saved $40.00', 'success');
+      document.getElementById('cart-subtotal-display').textContent = '₹15,999.00 (20% Off)';
+      this.showToast('Promo code SAVE20 applied! Saved ₹4,000.00', 'success');
     } else if (code === 'FREESHIP') {
       this.showToast('Free Expedited Delivery Applied!', 'success');
     } else if (code === 'VIP10') {
-      document.getElementById('cart-subtotal-display').textContent = '$179.99 (10% Off)';
+      document.getElementById('cart-subtotal-display').textContent = '₹17,999.00 (10% Off)';
       this.showToast('VIP10 Member discount applied!', 'success');
     } else {
       this.showToast(`Validating coupon '${code}' with ShopMate AI...`, 'info');

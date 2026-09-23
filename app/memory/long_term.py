@@ -125,17 +125,21 @@ class LongTermMemoryManager:
         """
         db = SessionLocal()
         try:
-            # Check if preference with exact same key or value already exists
+            # Check if exact same preference (category, key, and value) already exists
             existing = None
             if user_id:
                 existing = db.query(UserMemory).filter(
                     UserMemory.user_id == user_id,
-                    (UserMemory.key == key) | (UserMemory.value.ilike(value))
+                    UserMemory.category == category,
+                    UserMemory.key == key,
+                    UserMemory.value.ilike(value)
                 ).first()
             if not existing and session_id:
                 existing = db.query(UserMemory).filter(
                     UserMemory.session_id == session_id,
-                    (UserMemory.key == key) | (UserMemory.value.ilike(value))
+                    UserMemory.category == category,
+                    UserMemory.key == key,
+                    UserMemory.value.ilike(value)
                 ).first()
                 if existing and user_id:
                     existing.user_id = user_id
@@ -149,7 +153,7 @@ class LongTermMemoryManager:
                 db.refresh(existing)
                 record = existing
             else:
-                # Enforce max 5 preferences storage per user/session
+                # Enforce max 20 preferences storage per user/session
                 q_count = db.query(UserMemory)
                 if user_id:
                     q_count = q_count.filter(UserMemory.user_id == user_id)
@@ -157,9 +161,9 @@ class LongTermMemoryManager:
                     q_count = q_count.filter(UserMemory.session_id == session_id)
                 
                 existing_records = q_count.order_by(UserMemory.created_at.asc()).all()
-                if len(existing_records) >= 5:
-                    # Remove oldest to keep max 5
-                    to_remove = existing_records[: len(existing_records) - 4]
+                if len(existing_records) >= 20:
+                    # Remove oldest to keep max 20
+                    to_remove = existing_records[: len(existing_records) - 19]
                     for old_rec in to_remove:
                         if old_rec.chroma_id:
                             try:
@@ -199,7 +203,7 @@ class LongTermMemoryManager:
             db.close()
 
     def get_user_preferences(self, user_id: Optional[int] = None, session_id: Optional[str] = None) -> List[Dict[str, Any]]:
-        """Fetches up to 5 stored long-term preferences for a user/session."""
+        """Fetches stored long-term preferences for a user/session (up to 20)."""
         db = SessionLocal()
         try:
             query = db.query(UserMemory)
@@ -212,7 +216,7 @@ class LongTermMemoryManager:
             else:
                 return []
                 
-            memories = query.order_by(UserMemory.updated_at.desc()).limit(5).all()
+            memories = query.order_by(UserMemory.updated_at.desc()).limit(20).all()
             return [m.to_dict() for m in memories]
         finally:
             db.close()

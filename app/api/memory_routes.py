@@ -23,14 +23,6 @@ def list_preferences(
 ):
     user_id = current_user.id if current_user else None
     prefs = long_term_memory.get_user_preferences(user_id=user_id, session_id=session_id)
-    # If no preferences found for specific user/session, fallback to all active memories
-    if not prefs:
-        db = SessionLocal()
-        try:
-            all_mems = db.query(UserMemory).order_by(UserMemory.updated_at.desc()).all()
-            prefs = [m.to_dict() for m in all_mems]
-        finally:
-            db.close()
     return {"count": len(prefs), "preferences": prefs}
 
 @router.post("")
@@ -50,12 +42,9 @@ def add_preference(
 
 @router.get("/{username}")
 def get_user_memory_by_username(username: str, db: Session = Depends(get_db)):
-    user = db.query(User).filter(User.username == username).first()
+    user = db.query(User).filter((User.username == username) | (User.email == username)).first()
     user_id = user.id if user else None
     prefs = long_term_memory.get_user_preferences(user_id=user_id, session_id="default_session")
-    if not prefs:
-        all_mems = db.query(UserMemory).order_by(UserMemory.updated_at.desc()).all()
-        prefs = [m.to_dict() for m in all_mems]
     return {"username": username, "count": len(prefs), "preferences": prefs}
 
 @router.post("/{username}")
@@ -64,7 +53,7 @@ def add_user_memory_by_username(
     req: PreferenceCreateRequest,
     db: Session = Depends(get_db)
 ):
-    user = db.query(User).filter(User.username == username).first()
+    user = db.query(User).filter((User.username == username) | (User.email == username)).first()
     user_id = user.id if user else None
     mem = long_term_memory.save_preference(
         user_id=user_id,
@@ -77,7 +66,7 @@ def add_user_memory_by_username(
 
 @router.delete("/{username}/{key}")
 def delete_user_memory_key(username: str, key: str, db: Session = Depends(get_db)):
-    user = db.query(User).filter(User.username == username).first()
+    user = db.query(User).filter((User.username == username) | (User.email == username)).first()
     query = db.query(UserMemory).filter(UserMemory.key == key)
     if user:
         query = query.filter((UserMemory.user_id == user.id) | (UserMemory.user_id == None))

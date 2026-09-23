@@ -361,12 +361,17 @@ def tool_validate_coupon(code: str, cart_total: float = 0.0) -> Dict[str, Any]:
             }
 
         # Check cart minimum threshold
+        discount_desc = f"{coupon.discount_value}% Off" if coupon.discount_type == "percentage" else f"₹{coupon.discount_value:.2f} Off"
         if cart_total > 0 and cart_total < coupon.min_order_value:
             return {
                 "status": "threshold_not_met",
                 "valid": False,
                 "code": clean_code,
                 "min_order_value": coupon.min_order_value,
+                "discount_type": coupon.discount_type,
+                "discount_value": coupon.discount_value,
+                "discount_description": discount_desc,
+                "description": coupon.description,
                 "message": f"Coupon '{clean_code}' requires a minimum cart subtotal of ₹{coupon.min_order_value:.2f} (current cart: ₹{cart_total:.2f})."
             }
 
@@ -392,6 +397,8 @@ def tool_validate_coupon(code: str, cart_total: float = 0.0) -> Dict[str, Any]:
             "discount_amount": round(discount_amount, 2),
             "cart_total": round(cart_total, 2),
             "final_total": round(final_total, 2),
+            "min_order_value": coupon.min_order_value,
+            "max_discount": coupon.max_discount,
             "description": coupon.description,
             "message": f"Coupon '{clean_code}' successfully validated: {discount_desc} applied!"
         }

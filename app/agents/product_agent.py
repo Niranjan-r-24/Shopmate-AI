@@ -32,6 +32,41 @@ class ProductSearchAgent:
             elif "budget" in key:
                 budget_pref = val
 
+        # Check if user explicitly requested recommendations based on preferences, but has no preferences set
+        is_pref_request = any(k in q_lower for k in [
+            "my preference", "my preferences", "with my preference", "based on my preference",
+            "according to my preference", "within my budget", "in my budget", "for my size"
+        ])
+        if is_pref_request and not user_prefs:
+            duration_ms = (time.time() - start_time) * 1000.0
+            trace_step = {
+                "step_number": len(state.get("execution_trace", [])) + 1,
+                "node": "product_agent",
+                "action": "Detected preference recommendation request without active preferences in profile",
+                "details": {"query": query, "preferences_found": 0},
+                "duration_ms": round(duration_ms, 2),
+                "status": "completed"
+            }
+            return {
+                "retrieved_chunks": [],
+                "reranked_chunks": [],
+                "product_cards": [],
+                "tool_calls": [],
+                "tool_results": [],
+                "response": (
+                    "🧠 **No Shopping Preferences Found in Your Profile:**\n\n"
+                    "You haven't added any shopping preferences yet, so I cannot tailor recommendations to your profile!\n\n"
+                    "👉 **How to add your preferences:**\n"
+                    "1. Scroll to the **Shopping Preferences** section on the home page and click preset chips or fill out the form.\n"
+                    "2. Or tell me your criteria right here in the chat, for example:\n"
+                    "   - *\"My budget is ₹20,000\"*\n"
+                    "   - *\"I prefer Sony headphones\"*\n"
+                    "   - *\"My shoe size is 10.5 US\"* or *\"My shirt size is Large\"*\n\n"
+                    "Once you add your preferences, ask me again and I'll curate the perfect products for you!"
+                ),
+                "execution_trace": state.get("execution_trace", []) + [trace_step]
+            }
+
         # 2. Check if query is targeting price comparison / competitor check / Amazon / eBay search
         if any(k in q_lower for k in ["compare price", "price compare", "cheaper on", "price difference", "amazon price", "ebay price", "compare with amazon", "compare with ebay", "compare the price", "in amazon", "on amazon", "in ebay", "on ebay", "from amazon", "from ebay", "amazon and ebay"]):
             clean_term = re.sub(r"^(?:please\s+)?(?:can\s+you\s+)?(?:show\s+(?:me\s+)?|recommend\s+|best\s+|top\s+|compare\s+(?:the\s+)?prices?\s+(?:of\s+|for\s+)?|price\s+compare\s+(?:of\s+|for\s+)?|check\s+prices?\s+(?:of\s+|for\s+)?)", "", query, flags=re.IGNORECASE).strip()

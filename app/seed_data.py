@@ -116,16 +116,16 @@ def seed_all():
                     code="SAVE20",
                     discount_type="percentage",
                     discount_value=20.0,
-                    min_order_value=50.0,
-                    max_discount=100.0,
-                    description="20% luxury discount on orders of ₹50 or more"
+                    min_order_value=4000.0,
+                    max_discount=8000.0,
+                    description="20% luxury discount on orders of ₹4,000 or more"
                 ),
                 Coupon(
                     code="FREESHIP",
                     discount_type="fixed",
-                    discount_value=12.99,
-                    min_order_value=35.0,
-                    description="Complimentary white-glove expedited shipping"
+                    discount_value=1000.0,
+                    min_order_value=3000.0,
+                    description="Complimentary white-glove expedited shipping on orders over ₹3,000"
                 ),
                 Coupon(
                     code="VIP10",
@@ -137,9 +137,9 @@ def seed_all():
                 Coupon(
                     code="TECH50",
                     discount_type="fixed",
-                    discount_value=50.0,
-                    min_order_value=300.0,
-                    description="₹50 off premium laptops and acoustic gear over ₹300"
+                    discount_value=4150.0,
+                    min_order_value=25000.0,
+                    description="₹4,150 off premium laptops and acoustic gear over ₹25,000"
                 )
             ]
             db.add_all(coupons)
