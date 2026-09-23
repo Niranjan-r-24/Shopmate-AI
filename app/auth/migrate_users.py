@@ -64,22 +64,31 @@ def migrate_users_table():
 
             # Check and upgrade legacy test accounts (admin, support, niranjan) to robust bcrypt hashes if needed
             known_accounts = [
-                ("admin@shopmate.ai", "admin123"),
-                ("support@shopmate.ai", "support123"),
-                ("niranjan@shopmate.ai", "niranjan123")
+                ("admin@shopmate.ai", "admin", "admin123", "admin"),
+                ("support@shopmate.ai", "support", "support123", "support"),
+                ("niranjan@shopmate.ai", "niranjan", "niranjan123", "customer")
             ]
-            for email, default_pw in known_accounts:
-                user_row = conn.execute(text("SELECT id, password_hash FROM users WHERE email = :email"), {"email": email}).fetchone()
+            for email, uname, default_pw, role_val in known_accounts:
+                user_row = conn.execute(
+                    text("SELECT id, password_hash, hashed_password FROM users WHERE email = :email OR username = :uname"),
+                    {"email": email, "uname": uname}
+                ).fetchone()
                 if user_row:
-                    uid, phash = user_row[0], user_row[1]
-                    if not phash or not phash.startswith("$2b$"):
+                    uid, phash, hpass = user_row[0], user_row[1], user_row[2]
+                    needs_update = not (phash and phash.startswith("$2b$") and hpass and hpass.startswith("$2b$"))
+                    if needs_update:
                         new_bcrypt = get_password_hash(default_pw)
                         conn.execute(
-                            text("UPDATE users SET password_hash = :nh WHERE id = :uid"),
+                            text("UPDATE users SET password_hash = :nh, hashed_password = :nh WHERE id = :uid"),
                             {"nh": new_bcrypt, "uid": uid}
                         )
                         conn.commit()
-                        logger.info(f"Updated user {email} password_hash to bcrypt.")
+                        logger.info(f"Synchronized user {email} ({uname}) password hashes to bcrypt.")
+
+            # Ensure all users have both password_hash and hashed_password set
+            conn.execute(text("UPDATE users SET password_hash = hashed_password WHERE (password_hash IS NULL OR password_hash = '') AND hashed_password IS NOT NULL"))
+            conn.execute(text("UPDATE users SET hashed_password = password_hash WHERE (hashed_password IS NULL OR hashed_password = '') AND password_hash IS NOT NULL"))
+            conn.commit()
 
         logger.info("Authentication schema migration completed successfully.")
     except Exception as e:

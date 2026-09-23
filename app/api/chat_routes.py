@@ -98,6 +98,7 @@ def send_chat_message(
         "active_agent": state.get("active_agent"),
         "response": state.get("response"),
         "product_cards": state.get("product_cards", []),
+        "cart_action": state.get("cart_action"),
         "order_card": state.get("order_card"),
         "coupon_card": state.get("coupon_card"),
         "citations": state.get("citations", []),

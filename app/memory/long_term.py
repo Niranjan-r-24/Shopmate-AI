@@ -125,21 +125,17 @@ class LongTermMemoryManager:
         """
         db = SessionLocal()
         try:
-            # Check if exact same preference (category, key, and value) already exists
+            # Check if preference with same key already exists to update it
             existing = None
             if user_id:
                 existing = db.query(UserMemory).filter(
                     UserMemory.user_id == user_id,
-                    UserMemory.category == category,
-                    UserMemory.key == key,
-                    UserMemory.value.ilike(value)
+                    UserMemory.key == key
                 ).first()
             if not existing and session_id:
                 existing = db.query(UserMemory).filter(
                     UserMemory.session_id == session_id,
-                    UserMemory.category == category,
-                    UserMemory.key == key,
-                    UserMemory.value.ilike(value)
+                    UserMemory.key == key
                 ).first()
                 if existing and user_id:
                     existing.user_id = user_id
@@ -149,6 +145,7 @@ class LongTermMemoryManager:
                 existing.value = value
                 existing.category = category
                 existing.confidence = confidence
+                existing.updated_at = datetime.utcnow()
                 db.commit()
                 db.refresh(existing)
                 record = existing

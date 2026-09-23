@@ -117,9 +117,104 @@ const App = {
     if (window.MemoryManager) window.MemoryManager.init();
     if (window.Analytics) window.Analytics.init();
 
-    // 11. Initialize Home Preferences & Tools Lab
+    // 11. Initialize Home Preferences, Cart & Tools Lab
+    this.initCart();
     this.initHomePreferences();
     this.initToolsLab();
+  },
+
+  // ==========================================
+  // SHOPPING BAG & CART STATE
+  // ==========================================
+  cart: [],
+
+  initCart() {
+    try {
+      const saved = localStorage.getItem('shopmate_cart');
+      this.cart = saved ? JSON.parse(saved) : [];
+    } catch {
+      this.cart = [];
+    }
+    this.renderCart();
+  },
+
+  saveCart() {
+    localStorage.setItem('shopmate_cart', JSON.stringify(this.cart));
+    this.renderCart();
+  },
+
+  addToCart(sku, name, price, img, quantity = 1) {
+    const numericPrice = parseFloat(price) || 0.0;
+    const existing = this.cart.find(it => it.sku === sku);
+    if (existing) {
+      existing.quantity = (existing.quantity || 1) + quantity;
+    } else {
+      this.cart.push({
+        sku,
+        name,
+        price: numericPrice,
+        img: img || 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=200',
+        quantity
+      });
+    }
+    this.saveCart();
+    this.showToast(`Added ${name} to Shopping Bag!`, 'success');
+    const overlay = document.getElementById('cart-drawer-overlay');
+    if (overlay) overlay.classList.add('active');
+  },
+
+  removeFromCart(sku) {
+    this.cart = this.cart.filter(it => it.sku !== sku);
+    this.saveCart();
+    this.showToast('Item removed from Shopping Bag', 'info');
+  },
+
+  clearCart() {
+    this.cart = [];
+    this.saveCart();
+  },
+
+  renderCart() {
+    const list = document.getElementById('cart-items-list');
+    const badge = document.getElementById('cart-count');
+    const drawerBadge = document.getElementById('cart-drawer-count');
+    const subtotalEl = document.getElementById('cart-subtotal-display');
+
+    const totalCount = this.cart.reduce((sum, it) => sum + (it.quantity || 1), 0);
+    const subtotal = this.cart.reduce((sum, it) => sum + (it.price * (it.quantity || 1)), 0);
+
+    if (badge) badge.textContent = String(totalCount);
+    if (drawerBadge) drawerBadge.textContent = String(totalCount);
+    if (subtotalEl) {
+      subtotalEl.textContent = `₹${subtotal.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+    }
+
+    if (!list) return;
+
+    if (this.cart.length === 0) {
+      list.innerHTML = `
+        <div style="text-align: center; color: var(--text-muted); padding: 48px 16px;">
+          <i class="fa-solid fa-bag-shopping" style="font-size: 2.5rem; color: #94a3b8; margin-bottom: 12px; display: block;"></i>
+          <p style="font-size: 14px; font-weight: 600; color: var(--text-secondary);">Your shopping bag is empty</p>
+          <p style="font-size: 12px; color: var(--text-muted); margin-top: 4px;">Explore our catalog or ask AI Concierge to add products.</p>
+        </div>
+      `;
+      return;
+    }
+
+    list.innerHTML = this.cart.map(item => `
+      <div class="cart-item-row" data-sku="${item.sku}">
+        <img src="${item.img}" class="cart-item-thumb" alt="${item.name}">
+        <div class="cart-item-info">
+          <h5 class="cart-item-title">${item.name}</h5>
+          <span class="cart-item-price">₹${Number(item.price).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+          <div style="font-size: 11px; color: var(--text-muted); margin-top: 2px;">SKU: ${item.sku} • Qty: ${item.quantity || 1}</div>
+        </div>
+        <button class="icon-btn" style="color: var(--accent-rose); cursor: pointer;" onclick="App.removeFromCart('${item.sku}')" title="Remove item">
+          <i class="fa-solid fa-trash-can"></i>
+        </button>
+      </div>
+    `).join('');
   },
 
   initHomePreferences() {
@@ -137,6 +232,7 @@ const App = {
         try {
           const user = window.Auth ? window.Auth.getUser() : null;
           const identifier = (user && (user.username || user.email)) ? (user.username || user.email) : 'default';
+          const sessionId = (window.Chat && window.Chat.sessionId) ? window.Chat.sessionId : 'default_session';
 
           const res = await fetch(`/api/memory/${encodeURIComponent(identifier)}`, {
             method: 'POST',
@@ -144,7 +240,7 @@ const App = {
               'Content-Type': 'application/json',
               ...(window.Auth ? window.Auth.getAuthHeaders() : {})
             },
-            body: JSON.stringify({ category: cat, key, value: val, session_id: window.Chat ? window.Chat.sessionId : 'default_session' })
+            body: JSON.stringify({ category: cat, key, value: val, session_id: sessionId })
           });
 
           if (!res.ok) throw new Error('Failed to save preference');
@@ -176,9 +272,10 @@ const App = {
 
     const user = window.Auth ? window.Auth.getUser() : null;
     const identifier = (user && (user.username || user.email)) ? (user.username || user.email) : 'default';
+    const sessionId = (window.Chat && window.Chat.sessionId) ? window.Chat.sessionId : 'default_session';
 
     try {
-      const res = await fetch(`/api/memory/${encodeURIComponent(identifier)}`, {
+      const res = await fetch(`/api/memory/${encodeURIComponent(identifier)}?session_id=${encodeURIComponent(sessionId)}`, {
         headers: window.Auth ? window.Auth.getAuthHeaders() : {}
       });
       if (!res.ok) throw new Error('Failed to load');
@@ -293,17 +390,31 @@ const App = {
       this.showToast('Please enter a coupon code (e.g. SAVE20)', 'error');
       return;
     }
+    const subtotal = this.cart.reduce((sum, it) => sum + (it.price * (it.quantity || 1)), 0);
+    if (subtotal <= 0) {
+      this.showToast('Your shopping bag is empty. Add products before applying coupons!', 'error');
+      return;
+    }
+    const subtotalEl = document.getElementById('cart-subtotal-display');
     if (code === 'SAVE20') {
-      document.getElementById('cart-subtotal-display').textContent = '₹15,999.00 (20% Off)';
-      this.showToast('Promo code SAVE20 applied! Saved ₹4,000.00', 'success');
+      if (subtotal < 4000) {
+        this.showToast('SAVE20 requires a minimum order of ₹4,000.00', 'error');
+        return;
+      }
+      const disc = Math.min(subtotal * 0.20, 8000.0);
+      const finalTot = subtotal - disc;
+      if (subtotalEl) subtotalEl.textContent = `₹${finalTot.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} (Saved ₹${disc.toFixed(2)})`;
+      this.showToast(`Promo code SAVE20 applied! Saved ₹${disc.toFixed(2)}`, 'success');
     } else if (code === 'FREESHIP') {
-      this.showToast('Free Expedited Delivery Applied!', 'success');
+      this.showToast('Free Expedited Delivery Applied on your bag!', 'success');
     } else if (code === 'VIP10') {
-      document.getElementById('cart-subtotal-display').textContent = '₹17,999.00 (10% Off)';
-      this.showToast('VIP10 Member discount applied!', 'success');
+      const disc = subtotal * 0.10;
+      const finalTot = subtotal - disc;
+      if (subtotalEl) subtotalEl.textContent = `₹${finalTot.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} (Saved ₹${disc.toFixed(2)})`;
+      this.showToast('VIP10 Member 10% discount applied!', 'success');
     } else {
       this.showToast(`Validating coupon '${code}' with ShopMate AI...`, 'info');
-      this.openAiConcierge('chat', `Can I apply coupon code ${code} on my cart?`);
+      this.openAiConcierge('chat', `Apply coupon ${code} on ₹${subtotal.toFixed(2)}`);
     }
   },
 

@@ -511,20 +511,20 @@
       <div id="pane-signin" class="tab-content active">
         <form id="form-signin" autocomplete="off">
           
-          <!-- Email Field (Starts completely empty) -->
+          <!-- Email or Username Field -->
           <div class="form-group">
-            <label class="form-label" for="signin-email">Email Address</label>
+            <label class="form-label" for="signin-email">Email or Username</label>
             <div class="input-wrapper">
-              <i class="fa-regular fa-envelope input-icon"></i>
+              <i class="fa-regular fa-user input-icon"></i>
               <input 
-                type="email" 
+                type="text" 
                 id="signin-email" 
                 name="email" 
                 class="form-control no-trailing" 
                 value="" 
-                placeholder="name@example.com" 
+                placeholder="Enter email or username (e.g. admin or name@example.com)" 
                 required 
-                autocomplete="off"
+                autocomplete="username"
               >
             </div>
           </div>

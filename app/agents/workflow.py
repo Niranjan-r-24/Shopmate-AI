@@ -168,6 +168,7 @@ def execute_agent_workflow(
         "tool_calls": [],
         "tool_results": [],
         "product_cards": [],
+        "cart_action": None,
         "order_card": None,
         "coupon_card": None,
         "citations": [],

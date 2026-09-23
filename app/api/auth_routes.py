@@ -81,7 +81,8 @@ def register(req: UserRegisterRequest, db: Session = Depends(get_db)):
         )
 
     # Check if email is already registered
-    existing_user = db.query(User).filter(User.email == clean_email).first()
+    from sqlalchemy import func
+    existing_user = db.query(User).filter(func.lower(User.email) == clean_email).first()
     if existing_user:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
@@ -95,15 +96,19 @@ def register(req: UserRegisterRequest, db: Session = Depends(get_db)):
     base_username = clean_email.split("@")[0]
     username_candidate = base_username
     counter = 1
-    while db.query(User).filter(User.username == username_candidate).first():
+    while db.query(User).filter(func.lower(User.username) == username_candidate.lower()).first():
         username_candidate = f"{base_username}_{counter}"
         counter += 1
+
+    pw_clean = req.password.strip()
+    pw_hash = get_password_hash(pw_clean)
 
     user = User(
         full_name=req.full_name.strip(),
         email=clean_email,
         username=username_candidate,
-        password_hash=get_password_hash(req.password),
+        password_hash=pw_hash,
+        hashed_password=pw_hash,
         role=assigned_role,
         auth_provider=AuthProvider.LOCAL.value,
         is_active=True
@@ -128,20 +133,21 @@ def register(req: UserRegisterRequest, db: Session = Depends(get_db)):
 @router.post("/login", response_model=TokenResponse)
 def login(req: UserLoginRequest, request: Request, db: Session = Depends(get_db)):
     """
-    Email/password login endpoint with rate limiting.
+    Email or username login endpoint with rate limiting.
     Supports empty initial state on frontend and bcrypt verification.
     """
+    from sqlalchemy import func
     identifier = (req.email or req.username or "").strip().lower()
     if not identifier or not req.password:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Email and password are required"
+            detail="Email/username and password are required"
         )
 
     client_ip = request.client.host if request.client else "unknown"
     rate_key = f"{client_ip}:{identifier}"
 
-    # Rate limiting check
+    # Rate limiting check (allows 10 attempts in sliding window)
     is_limited, remaining_sec = rate_limiter.is_rate_limited(rate_key)
     if is_limited:
         raise HTTPException(
@@ -149,15 +155,28 @@ def login(req: UserLoginRequest, request: Request, db: Session = Depends(get_db)
             detail=f"Too many failed login attempts. Please try again in {remaining_sec} seconds."
         )
 
-    # Find user by email or username
+    # Find user by email or username (case-insensitive)
     user = db.query(User).filter(
-        ((User.email == identifier) | (User.username == identifier)),
+        ((func.lower(User.email) == identifier) | (func.lower(User.username) == identifier)),
         User.is_active == True
     ).first()
 
-    current_hash = user.password_hash if (user and user.password_hash) else (user.hashed_password if user else None)
+    pw_input = req.password
+    pw_input_trimmed = req.password.strip()
 
-    if not user or not current_hash or not verify_password(req.password, current_hash):
+    valid_password = False
+    if user:
+        # Check primary password_hash
+        if user.password_hash:
+            if verify_password(pw_input, user.password_hash) or verify_password(pw_input_trimmed, user.password_hash):
+                valid_password = True
+
+        # Check secondary hashed_password fallback
+        if not valid_password and user.hashed_password:
+            if verify_password(pw_input, user.hashed_password) or verify_password(pw_input_trimmed, user.hashed_password):
+                valid_password = True
+
+    if not user or not valid_password:
         rate_limiter.record_failure(rate_key)
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
@@ -167,10 +186,13 @@ def login(req: UserLoginRequest, request: Request, db: Session = Depends(get_db)
     # Success: clear rate limiter
     rate_limiter.record_success(rate_key)
 
-    # Upgrade hash to bcrypt if it was legacy format
+    # Upgrade legacy hash to bcrypt if needed
+    current_hash = user.password_hash or user.hashed_password or ""
     if not current_hash.startswith("$2b$"):
         try:
-            user.password_hash = get_password_hash(req.password)
+            new_hash = get_password_hash(pw_input_trimmed)
+            user.password_hash = new_hash
+            user.hashed_password = new_hash
             db.commit()
         except Exception:
             pass

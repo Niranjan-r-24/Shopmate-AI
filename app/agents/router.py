@@ -145,7 +145,11 @@ class IntentRouterAgent:
         if ("sku" in params and any(k in q for k in ["in stock", "stock", "how many left", "available", "availability", "inventory"])) or any(k in q for k in ["in stock right now", "in stock", "is it in stock", "check stock", "stock count", "how many available", "stock status", "availability"]):
             return "inventory_check", 0.95, "inventory_agent"
 
-        # 5. Price Match Guarantee Action & Coupon Validation
+        # 5. Cart Actions - Add to cart, shopping bag
+        if re.search(r"\b(?:add|put)\b.*?\b(?:cart|bag)\b", q) or any(k in q for k in ["add to cart", "add to my cart", "add to bag", "add to my bag", "put in cart", "put in my cart", "add this to cart", "add product to cart"]):
+            return "product_search", 0.98, "product_agent"
+
+        # 6. Price Match Guarantee Action & Coupon Validation
         if ("price match" in q or "match price" in q) and ("sku" in params or "competitor_price" in params or "max_price" in params or "₹" in q or "$" in q or any(c in q for c in ["elec-", "appr-", "home-", "at ₹", "at $", "for ₹", "for $"])):
             return "coupon_validation", 0.98, "coupon_agent"
 

@@ -33,6 +33,7 @@ class ShopMateState(TypedDict):
     
     # Structured Outputs for UI
     product_cards: List[Dict[str, Any]]
+    cart_action: Optional[Dict[str, Any]]
     order_card: Optional[Dict[str, Any]]
     coupon_card: Optional[Dict[str, Any]]
     citations: List[Dict[str, Any]]

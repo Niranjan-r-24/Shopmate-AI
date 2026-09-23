@@ -96,7 +96,7 @@
 
         <button class="nav-icon-btn" id="btn-cart-drawer-trigger" title="Shopping Cart">
           <i class="fa-solid fa-bag-shopping"></i>
-          <span class="badge-count" id="cart-count">1</span>
+          <span class="badge-count" id="cart-count">0</span>
         </button>
 
         <button class="user-profile-btn" id="btn-auth-trigger">
@@ -758,20 +758,12 @@
   <div class="cart-drawer-overlay" id="cart-drawer-overlay">
     <div class="cart-drawer">
       <div class="cart-drawer-header">
-        <h3>Your Shopping Bag (<span id="cart-drawer-count">1</span>)</h3>
+        <h3>Your Shopping Bag (<span id="cart-drawer-count">0</span>)</h3>
         <button class="icon-btn" id="btn-close-cart-drawer"><i class="fa-solid fa-xmark"></i></button>
       </div>
 
       <div class="cart-items-list" id="cart-items-list">
-        <div class="cart-item-row">
-          <img src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=200" class="cart-item-thumb" alt="Product">
-          <div class="cart-item-info">
-            <h5 class="cart-item-title">AuraSound Pro Wireless Headphones</h5>
-            <span class="cart-item-price">₹19,999.00</span>
-            <div style="font-size: 11px; color: var(--text-muted); margin-top: 2px;">SKU: ELEC-1001 • Qty: 1</div>
-          </div>
-          <button class="icon-btn" style="color: var(--accent-rose);" onclick="App.showToast('Item removed from cart', 'info')"><i class="fa-solid fa-trash-can"></i></button>
-        </div>
+        <!-- Dynamically loaded by App.renderCart() -->
       </div>
 
       <div class="cart-drawer-footer">
@@ -781,7 +773,7 @@
         </div>
         <div class="cart-total-row">
           <span>Subtotal:</span>
-          <span id="cart-subtotal-display">₹19,999.00</span>
+          <span id="cart-subtotal-display">₹0.00</span>
         </div>
         <button class="btn-checkout" onclick="App.showToast('Redirecting to Luxury Checkout for Niranjan R...', 'success')">Proceed to Checkout</button>
       </div>

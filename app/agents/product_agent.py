@@ -67,6 +67,94 @@ class ProductSearchAgent:
                 "execution_trace": state.get("execution_trace", []) + [trace_step]
             }
 
+        # 1B. Check if query is an "Add to Cart" request
+        is_add_to_cart = bool(re.search(r"\b(?:add|put)\b.*?\b(?:cart|bag)\b", q_lower)) or any(k in q_lower for k in [
+            "add to cart", "add to my cart", "add to bag", "add to my bag",
+            "put in cart", "put in my cart", "add this to cart", "add this to bag",
+            "add product to cart", "add it to cart", "buy this", "into my cart", "into the bag"
+        ])
+        if is_add_to_cart:
+            from app.database import SessionLocal
+            from app.models.product import Product
+
+            db = SessionLocal()
+            target_prod = None
+            try:
+                sku = params.get("sku")
+                if sku:
+                    target_prod = db.query(Product).filter(Product.sku == sku, Product.is_active == True).first()
+
+                if not target_prod:
+                    clean_target = re.sub(r"\b(?:add\s+(?:this\s+)?to\s+(?:my\s+)?(?:cart|bag)|put\s+(?:this\s+)?in\s+(?:my\s+)?(?:cart|bag)|to\s+(?:my\s+)?(?:cart|bag)|into\s+(?:my\s+)?(?:cart|bag)|add|put|buy\s+(?:this)?|please|can\s+you)\b", "", query, flags=re.IGNORECASE).strip()
+                    prods = db.query(Product).filter(Product.is_active == True).all()
+
+                    # Match SKU
+                    for p in prods:
+                        if p.sku.lower() in clean_target.lower():
+                            target_prod = p
+                            break
+
+                    # Match product name
+                    if not target_prod and clean_target:
+                        for p in prods:
+                            if p.name.lower() in clean_target.lower() or clean_target.lower() in p.name.lower():
+                                target_prod = p
+                                break
+
+                    # Match brand or distinctive keyword
+                    if not target_prod and clean_target:
+                        clean_lower = clean_target.lower()
+                        for p in prods:
+                            if p.brand.lower() in clean_lower:
+                                target_prod = p
+                                break
+                            distinctive_words = [w for w in p.name.lower().split() if len(w) > 4 and w not in ["wireless", "pro", "ultra", "smart", "black", "series", "edition", "portable", "premium"]]
+                            if any(w in clean_lower for w in distinctive_words):
+                                target_prod = p
+                                break
+
+                    # Fallback to first active product if nothing matched
+                    if not target_prod and prods:
+                        target_prod = prods[0]
+            finally:
+                db.close()
+
+            if target_prod:
+                p_dict = target_prod.to_dict()
+                duration_ms = (time.time() - start_time) * 1000.0
+                trace_step = {
+                    "step_number": len(state.get("execution_trace", [])) + 1,
+                    "node": "product_agent",
+                    "action": "Added product to shopping cart drawer from assistant chat",
+                    "details": {"product": p_dict["name"], "sku": p_dict["sku"], "price": p_dict["price"]},
+                    "duration_ms": round(duration_ms, 2),
+                    "status": "completed"
+                }
+                response_text = (
+                    f"🛍️ **Added to Your Shopping Bag!**\n\n"
+                    f"- **Product:** **{p_dict['name']}**\n"
+                    f"- **SKU:** `{p_dict['sku']}`\n"
+                    f"- **Price:** **₹{p_dict['price']:,.2f}**\n"
+                    f"- **Stock Status:** {'✅ In Stock' if p_dict['in_stock'] else '⚠️ Low Stock'}\n\n"
+                    f"I've added 1 unit of this item to your shopping bag! Your bag drawer is now updated. You can apply promo codes (like `SAVE20`) or proceed to checkout anytime."
+                )
+                return {
+                    "retrieved_chunks": [],
+                    "reranked_chunks": [],
+                    "product_cards": [p_dict],
+                    "cart_action": {
+                        "action": "add_to_cart",
+                        "sku": p_dict["sku"],
+                        "name": p_dict["name"],
+                        "price": p_dict["price"],
+                        "image_url": p_dict.get("image_url")
+                    },
+                    "tool_calls": [],
+                    "tool_results": [],
+                    "response": response_text,
+                    "execution_trace": state.get("execution_trace", []) + [trace_step]
+                }
+
         # 2. Check if query is targeting price comparison / competitor check / Amazon / eBay search
         if any(k in q_lower for k in ["compare price", "price compare", "cheaper on", "price difference", "amazon price", "ebay price", "compare with amazon", "compare with ebay", "compare the price", "in amazon", "on amazon", "in ebay", "on ebay", "from amazon", "from ebay", "amazon and ebay"]):
             clean_term = re.sub(r"^(?:please\s+)?(?:can\s+you\s+)?(?:show\s+(?:me\s+)?|recommend\s+|best\s+|top\s+|compare\s+(?:the\s+)?prices?\s+(?:of\s+|for\s+)?|price\s+compare\s+(?:of\s+|for\s+)?|check\s+prices?\s+(?:of\s+|for\s+)?)", "", query, flags=re.IGNORECASE).strip()

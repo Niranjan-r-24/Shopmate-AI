@@ -158,11 +158,20 @@ const Chat = {
 
     let html = this.formatMarkdown(data.response || '');
 
+    // Trigger cart action if returned by assistant
+    if (data.cart_action && data.cart_action.action === 'add_to_cart') {
+      const ca = data.cart_action;
+      if (window.App && typeof window.App.addToCart === 'function') {
+        window.App.addToCart(ca.sku, ca.name, ca.price, ca.image_url);
+      }
+    }
+
     // Render Product Cards Grid if returned
     if (data.product_cards && data.product_cards.length > 0) {
       html += '<div class="product-cards-carousel">';
       data.product_cards.forEach((p) => {
         const inStock = p.stock_count > 0;
+        const safeName = this.escapeHtml(p.name).replace(/'/g, "\\'");
         html += `
           <div class="product-item-card">
             <div class="product-img-box">
@@ -176,9 +185,12 @@ const Chat = {
                 <span class="product-price-current">₹${Number(p.price).toFixed(2)}</span>
                 ${p.original_price > p.price ? `<span class="product-price-original">₹${Number(p.original_price).toFixed(2)}</span>` : ''}
               </div>
-              <div style="display: flex; justify-content: space-between; align-items: center; margin-top: auto;">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-top: auto; gap: 0.35rem;">
                 <span class="product-rating"><i class="fa-solid fa-star"></i> ${p.rating || 4.5}</span>
-                <button class="btn-card-action" onclick="Chat.sendMessage('Check inventory and details for SKU ${p.sku}')">Inspect</button>
+                <div style="display: flex; gap: 0.35rem;">
+                  <button class="btn-card-action" onclick="Chat.sendMessage('Check inventory and details for SKU ${p.sku}')" style="padding: 0.25rem 0.5rem; font-size: 0.72rem;">Inspect</button>
+                  <button class="btn-card-action" onclick="window.App && window.App.addToCart('${p.sku}', '${safeName}', ${Number(p.price)}, '${p.image_url || ''}')" style="background: var(--accent-primary); color: #fff; padding: 0.25rem 0.5rem; font-size: 0.72rem; border-color: var(--accent-primary);" title="Add to Bag"><i class="fa-solid fa-bag-shopping"></i> + Bag</button>
+                </div>
               </div>
             </div>
           </div>

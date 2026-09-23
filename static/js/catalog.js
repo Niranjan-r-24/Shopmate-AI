@@ -210,30 +210,9 @@ const Catalog = {
   },
 
   addToCart(sku, name, price, img) {
-    const list = document.getElementById('cart-items-list');
-    const badge = document.getElementById('cart-count');
-    const drawerBadge = document.getElementById('cart-drawer-count');
-    
-    if (list) {
-      const row = document.createElement('div');
-      row.className = 'cart-item-row';
-      row.innerHTML = `
-        <img src="${img || 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=200'}" class="cart-item-thumb" alt="${name}">
-        <div class="cart-item-info">
-          <h5 class="cart-item-title">${name}</h5>
-          <span class="cart-item-price">₹${Number(price).toFixed(2)}</span>
-          <div style="font-size: 11px; color: var(--text-muted); margin-top: 2px;">SKU: ${sku} • Qty: 1</div>
-        </div>
-        <button class="icon-btn" style="color: var(--accent-rose);" onclick="this.parentElement.remove(); window.App.showToast('Item removed', 'info');"><i class="fa-solid fa-trash-can"></i></button>
-      `;
-      list.appendChild(row);
+    if (window.App && typeof window.App.addToCart === 'function') {
+      window.App.addToCart(sku, name, price, img);
     }
-
-    if (badge) badge.textContent = String(parseInt(badge.textContent || '0') + 1);
-    if (drawerBadge) drawerBadge.textContent = badge ? badge.textContent : '2';
-
-    window.App.showToast(`Added ${name} to Shopping Bag!`, 'success');
-    document.getElementById('cart-drawer-overlay').classList.add('active');
   }
 };
 
