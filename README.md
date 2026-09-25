@@ -4,15 +4,28 @@
 [![LangGraph](https://img.shields.io/badge/LangGraph-Multi--Agent-orange)](https://github.com/langchain-ai/langgraph)
 [![ChromaDB](https://img.shields.io/badge/ChromaDB-Vector_Storage-blue)](https://www.trychroma.com/)
 [![SQLAlchemy](https://img.shields.io/badge/SQLAlchemy-2.0+-red)](https://www.sqlalchemy.org/)
+[![Google Cloud Run](https://img.shields.io/badge/Google_Cloud_Run-Ready-4285F4?logo=googlecloud&logoColor=white)](https://cloud.google.com/run)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
-An enterprise-grade, multi-agent conversational retail intelligence platform built with **FastAPI**, **LangChain**, **LangGraph**, **ChromaDB**, **PostgreSQL / SQLite**, and a modern **Dark Glassmorphism UI**.
+An enterprise-grade, multi-agent conversational retail intelligence platform built with **FastAPI**, **LangChain**, **LangGraph**, **ChromaDB**, **PostgreSQL / SQLite**, and a responsive **Dark Glassmorphism UI** paired with a modern **Authentication & Role-Based Access Control** portal.
 
-ShopMate AI orchestrates specialized autonomous agents (Product Discovery, Store Policy RAG, Inventory Telemetry, Order Tracking, Return Eligibility, and Coupon Validation) with strict **Critic Groundedness** and **Safety Guardrails**.
+ShopMate AI orchestrates specialized autonomous agents (Product Discovery, Store Policy RAG, Live Inventory, Order Tracking, Return Eligibility, and Coupon Validation) with strict **Critic Groundedness** and **Safety Guardrails**.
 
 ---
 
-## 🌟 Key Architectural Features
+## 🌟 Key Features & Innovations
+
+### 1. 🤖 Multi-Agent Orchestration via LangGraph
+- **Intent Router:** Dynamically classifies queries and extracts structured parameters (SKUs, Order IDs, Coupon codes, price ranges).
+- **Specialized Domain Agents:**
+  - **Product Discovery Agent:** Hybrid semantic search with reciprocal rank fusion and brand/price filtering.
+  - **Policy RAG Agent:** Grounded answers over store policies (shipping, returns, warranty, price matching).
+  - **Inventory Agent:** Real-time warehouse telemetry, low-stock warnings, and restock ETAs.
+  - **Order Tracking Agent:** Live carrier telemetry, GPS status, and delivery milestones.
+  - **Return Eligibility Agent:** RMA generation, return window validation, and restocking fee checks.
+  - **Coupon & Discount Agent:** Promo code math, threshold validation, and savings calculation.
+- **Critic Agent & Guardrails:** Evaluates factual groundedness ($0.0 \dots 1.0$), removes hallucinations, and rejects prompt injection attempts.
+- **Interactive 3-Dot Quick Tools Sidebar:** In-chat drawer for direct access to Tools Lab, Memory, 4-Way RAG, and Catalog without leaving the chat.
 
 ```
 User Query
@@ -31,32 +44,58 @@ User Query
     └────────────────────── Dual Memory Context ──────────────────────────────────────┴─► [Structured UI Cards & Trace]
 ```
 
-### 1. Hybrid Search & Cross-Encoder Re-ranking
-- **Dense Semantic Search:** ChromaDB cosine vector index with 384-d normalized embeddings.
+### 2. 🔍 Hybrid Search & Cross-Encoder Re-ranking
+- **Dense Semantic Search:** ChromaDB cosine vector index with 384-d normalized embeddings (supports local zero-dependency embeddings, Google Gemini, or OpenAI).
 - **Sparse BM25 Keyword Search:** In-memory BM25 Okapi index over tokenized catalogs and policy documents.
 - **Reciprocal Rank Fusion (RRF):** Blends dense and sparse retrieval ranks with score normalization:
   $$RRF\_score(d) = \frac{\alpha}{60 + rank_{dense}(d)} + \frac{1 - \alpha}{60 + rank_{bm25}(d)}$$
 - **Cross-Encoder Scoring:** Re-evaluates top-$k$ retrieved candidate passages with query cross-scoring to eliminate hallucinations.
+- **4-Way Retrieval Comparator:** Visual studio in the UI comparing Dense vs BM25 vs Hybrid vs Cross-Encoder side-by-side.
 
-### 2. Multi-Agent Orchestration via LangGraph
-- **State-Driven Workflow:** Typed graph state with execution traces, active tool calls, and state transitions.
-- **Intent Router:** Accurately routes queries to specialized domain agents.
-- **Critic & Safety Guardrails:** Computes factual groundedness scores ($0.0 \dots 1.0$) and enforces retail safety policies against prompt injections.
-
-### 3. Dual Memory Architecture
+### 3. 🧠 Dual Memory Architecture (5-Preference Storage)
 - **Short-Term Memory:** Conversational buffer storing multi-turn user/assistant exchanges.
-- **Long-Term Memory:** Extracts personalized user preferences (e.g. shoe size, favorite brands, typical budget) and persists them in SQL and ChromaDB vector storage.
+- **Persistent Long-Term Memory:** Automatically extracts and persists 5 key customer preferences:
+  1. *Shoe Size*
+  2. *Clothing / Apparel Size*
+  3. *Favorite Brands*
+  4. *Typical Shopping Budget*
+  5. *Tech / Style Preferences*
+- Stored across relational SQLite/PostgreSQL and ChromaDB vector memory for tailored personalization.
+- Full UI Memory Manager tab to view, add, modify, or clear preferences at any time.
 
-### 4. Evaluation & Telemetry Dashboard
-- Automated Benchmark Suite measuring **Precision@K**, **Recall@K**, **Mean Reciprocal Rank (MRR)**, **Routing Accuracy**, and **Critic Pass Rate**.
-- Live Query Telemetry logs with step-by-step latency breakdown.
+### 4. 🛍️ Reactive Shopping Bag & Cart Integration
+- **Real-Time Slide-Out Cart:** Instant badge counter, item quantity controls, price subtotal, and tax calculation.
+- **In-Chat Cart Actions:** One-click "Add to Cart" directly from product recommendation cards generated by the AI assistant.
+- **Multi-Currency Support:** Seamless switching and calculation in both **Indian Rupees (₹ / INR)** and **US Dollars ($ / USD)** across products, carts, and discounts.
 
-### 5. Dark Glassmorphism Frontend
-- Interactive chat stream with rich product recommendation carousel cards.
-- Live **Agent Execution Timeline** displaying node durations and parameters in real time.
-- 4-Way Retrieval Comparator testing Dense vs BM25 vs Hybrid vs Cross-Encoder.
-- Product Catalog Explorer with live price sliders, category badges, and in-stock filters.
-- Retail Tools Lab for standalone interactive experimentation.
+### 5. 🛠️ Retail Tools Lab & Competitor Price Match
+- **Live Competitor Price Comparison:** Queries real-time prices via Amazon (Rainforest API) and eBay (Countdown API).
+- **Automated Price Match Coupons:** Generates certified promotional price match discount codes (e.g. `PM-AMA-...`) matching lower competitor prices.
+- **RMA Return Validator:** Validates purchase dates against policy return windows and conditions.
+- **Order Carrier Tracker:** Simulates carrier telemetry for FedEx, UPS, DHL, and BlueDart.
+
+### 6. 🔐 Modern Authentication, Registration & RBAC
+- **Universal Sign-In:** Sign in with **Username OR Email**.
+- **Customer Registration:** Dedicated sign-up flow (`/api/auth/register`) for new customers.
+- **Google OAuth 2.0 Sign-In:** Supported with token exchange and simulated fallback.
+- **Dual-Token JWT Security:** Short-lived access tokens + secure refresh tokens (`/api/auth/refresh`).
+- **Forgot Password Workflow:** Dispatches password reset instructions via `/api/auth/forgot-password`.
+- **Role-Based Access Control (RBAC):**
+  - `Admin`: Full access to benchmark evaluation, analytics telemetry, and system management.
+  - `Support`: Access to order management, customer memory inspection, and return validations.
+  - `Customer`: Personalized shopping, AI assistant chat, cart, and memory preference manager.
+- **Clean Aesthetic:** Modern clean-white theme sign-in/sign-up portal (`login.html`) paired with the dark glassmorphism SPA dashboard (`index.html`).
+
+### 7. ☁️ Google Cloud Run & Multi-Cloud Production Ready
+- **FastAPI Entrypoint:** Root `main.py` enabling standard startup:
+  ```bash
+  uvicorn main:app --host 0.0.0.0 --port $PORT
+  ```
+- **Dynamic Port Binding:** Automatically detects and binds to Cloud Run's injected `$PORT` (default `8080`).
+- **Serverless Ephemeral Storage:** Detects container environments (`K_SERVICE` / `VERCEL`) to isolate runtime SQLite and ChromaDB data in `/tmp/shopmate-ai`.
+- **Production CORS:** Configurable `ALLOWED_ORIGINS` for decoupled **React / Next.js** frontends (e.g. hosted on Vercel or Firebase) with credential support.
+- **Secrets Management:** Integrated with Google Cloud Secret Manager.
+- **Container Build:** Production `Dockerfile`, `.dockerignore`, and `.gcloudignore` included.
 
 ---
 
@@ -65,16 +104,17 @@ User Query
 ### 1. Installation
 
 ```bash
-# Clone or navigate to the repository
-cd "Shopmate AI"
+# Clone the repository
+git clone https://github.com/Niranjan-r-24/Shopmate-AI.git
+cd Shopmate-AI
 
 # Install dependencies
 pip install -r requirements.txt
 ```
 
-### 2. Configure Environment (Optional)
+### 2. Configure Environment
 
-Copy the environment template:
+Copy the configuration template:
 ```bash
 cp .env.example .env
 ```
@@ -86,7 +126,7 @@ cp .env.example .env
 #### Local Development:
 ```bash
 uvicorn main:app --host 127.0.0.1 --port 8000 --reload
-# Or simply:
+# Or directly:
 python main.py
 ```
 
@@ -96,36 +136,96 @@ uvicorn main:app --host 0.0.0.0 --port $PORT
 ```
 
 Open your browser and navigate to:
-👉 **`http://localhost:8000`**
-
-Explore the interactive API Swagger Documentation at:
-👉 **`http://localhost:8000/docs`**
+👉 **`http://localhost:8000`** (Main Application)
+👉 **`http://localhost:8000/login`** (Sign In / Sign Up Portal)
+👉 **`http://localhost:8000/docs`** (Interactive Swagger API Documentation)
 
 ---
 
 ## ☁️ Google Cloud Run Deployment
 
-ShopMate AI is fully configured for serverless production deployment on **Google Cloud Run**:
+ShopMate AI is ready for serverless production deployment on **Google Cloud Run**:
 
-- **Dynamic Port Binding:** Automatically binds to `$PORT` (default `8080`).
-- **Production CORS:** Configured via `ALLOWED_ORIGINS` to support decoupled **React / Next.js** frontends with full credential support.
-- **Secrets Management:** Ready for Google Cloud Secret Manager integration.
-- **Container Build:** Production `Dockerfile` and `.gcloudignore` included.
-
-### Quick Deploy:
 ```bash
-# Deploy directly from source
 gcloud run deploy shopmate-ai \
   --source . \
   --region us-central1 \
   --allow-unauthenticated \
   --memory 2Gi \
   --cpu 2 \
+  --min-instances 0 \
+  --max-instances 10 \
   --set-env-vars="ENVIRONMENT=production,ALLOWED_ORIGINS=https://your-react-app.vercel.app,http://localhost:3000" \
   --set-secrets="SECRET_KEY=SHOPMATE_SECRET_KEY:latest"
 ```
 
 > 📖 For comprehensive deployment steps, Secret Manager setup, and Cloud SQL configuration, see [DEPLOYMENT.md](DEPLOYMENT.md).
+
+---
+
+## 🔐 Default Demo Accounts
+
+| Role | Username | Password | Access Rights |
+|---|---|---|---|
+| **Admin** | `admin` | `admin123` | Full access: Evaluation benchmarks, telemetry, RAG explorer, catalog, chat |
+| **Support** | `support` | `support123` | Support access: Order tracking, returns, RMA validation, customer preferences |
+| **Customer** | `sindhu` | `sindhu123` | Customer access: Conversational shopping, cart, preference memory |
+
+*(New customers can also create an account instantly via the **Create Customer Account** tab on `/login` or use Google Sign-In)*
+
+---
+
+## 📁 Project Structure
+
+```
+Shopmate AI/
+├── main.py                   # Root application entrypoint (Cloud Run & local)
+├── Dockerfile                # Production container specification (Python 3.11)
+├── .dockerignore             # Docker build exclusion rules
+├── .gcloudignore             # Google Cloud Run / Cloud Build exclusion rules
+├── DEPLOYMENT.md             # Complete Google Cloud Run deployment guide
+├── Procfile                  # Process file for container/PaaS runners
+├── vercel.json               # Serverless configuration for Vercel
+├── app/
+│   ├── config.py             # Pydantic settings (PORT, CORS origins, secrets, runtime dir)
+│   ├── database.py           # SQLAlchemy database engine and session
+│   ├── seed_data.py          # DB & Vector collections seeder (catalog & policies)
+│   ├── main.py               # FastAPI application, lifespan, routes & CORS middleware
+│   ├── models/               # SQLAlchemy models (User, Product, Order, Memory, Analytics)
+│   ├── auth/                 # JWT security, dual-token auth, RBAC & user migrations
+│   ├── rag/                  # Embeddings, ChromaDB, Ingestion, Hybrid Search, Reranker
+│   ├── agents/               # LangGraph Router, Agents, Critic, Tools, Workflow Graph
+│   ├── memory/               # Short-term and Long-term 5-preference user memory
+│   ├── evaluation/           # Metrics (Precision, Recall, MRR) & Golden Benchmark runner
+│   └── api/                  # Modular REST API endpoints:
+│       ├── auth_routes.py    # Login, register, refresh, google, forgot-password
+│       ├── chat_routes.py    # Conversational agent chat & execution trace
+│       ├── product_routes.py # Catalog retrieval, search, and category metadata
+│       ├── order_routes.py   # Order details and tracking
+│       ├── tool_routes.py    # Price comparison, price match, returns, coupons
+│       ├── memory_routes.py  # User preference CRUD operations
+│       ├── rag_routes.py     # 4-way retrieval comparator & collection stats
+│       └── analytics_routes.py # Agent latency breakdown & query telemetry
+├── data/
+│   ├── products.json         # Retail product catalog dataset (INR & USD)
+│   ├── sample_orders.json    # Test orders with tracking telemetry
+│   └── policies/             # Return, shipping, warranty, and pricing policies
+├── static/
+│   ├── index.html            # Dark Glassmorphism SPA dashboard
+│   ├── login.html            # Clean-white theme Sign In / Sign Up portal
+│   ├── css/style.css         # Glassmorphism design system & responsive styling
+│   └── js/                   # Modular frontend controllers:
+│       ├── app.js            # Main application router, cart, navigation
+│       ├── auth.js           # Session management & token handling
+│       ├── chat.js           # Multi-agent streaming chat & card renderer
+│       ├── catalog.js        # Catalog explorer with price/brand filters
+│       ├── rag_explorer.js   # 4-way search comparator
+│       ├── memory_manager.js # Preference profile manager
+│       └── analytics.js      # Evaluation suite & benchmark charts
+├── tests/                    # Automated PyTest test suites (API, Agents, Auth, RAG)
+├── requirements.txt          # Production Python dependencies
+└── README.md
+```
 
 ---
 
@@ -139,48 +239,6 @@ pytest -v
 
 ---
 
-## 📁 Project Structure
+## 📄 License
 
-```
-Shopmate AI/
-├── main.py                   # Root application entrypoint (Cloud Run & local)
-├── Dockerfile                # Production container specification
-├── .dockerignore             # Docker build exclusion rules
-├── .gcloudignore             # Cloud Build / Cloud Run exclusion rules
-├── DEPLOYMENT.md             # Complete Google Cloud Run deployment guide
-├── Procfile                  # Process file for container/PaaS runners
-├── app/
-│   ├── config.py             # Pydantic settings (PORT, CORS origins, secrets)
-│   ├── database.py           # SQLAlchemy database engine and session
-│   ├── seed_data.py          # DB & Vector collections seeder
-│   ├── main.py               # FastAPI application & production CORS middleware
-│   ├── models/               # Database models (User, Product, Order, Memory, Analytics)
-│   ├── auth/                 # JWT authentication & RBAC dependencies
-│   ├── rag/                  # Embeddings, ChromaDB, Ingestion, Hybrid Search, Reranker
-│   ├── agents/               # LangGraph Router, Agents, Critic, Tools, Workflow Graph
-│   ├── memory/               # Short-term and Long-term user preference memory
-│   ├── evaluation/           # Metrics (Precision, Recall, MRR) & Benchmark runner
-│   └── api/                  # Modular REST API routes
-├── data/
-│   ├── products.json         # Retail product catalog dataset
-│   ├── sample_orders.json    # Test orders with tracking telemetry
-│   └── policies/             # Return, shipping, warranty, and pricing policies
-├── static/
-│   ├── index.html            # Dark Glassmorphism SPA dashboard
-│   ├── css/style.css         # Glassmorphism design system
-│   └── js/                   # Modular frontend controllers (chat, catalog, rag, analytics)
-├── tests/                    # Automated PyTest test suites
-├── requirements.txt          # Production Python dependencies
-└── README.md
-```
-
----
-
-## 🔐 Default Demo Accounts
-
-| Role | Username | Password |
-|---|---|---|
-| **Admin** | `admin` | `admin123` |
-| **Support** | `support` | `support123` |
-| **Customer** | `sindhu` | `sindhu123` |
-
+This project is licensed under the MIT License — see the [LICENSE](LICENSE) file for details.
