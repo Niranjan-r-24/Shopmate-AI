@@ -5,9 +5,9 @@ from typing import Optional
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 # Files committed in ``data/`` are deployed with the application and must be
-# read from the project directory. Vercel's deployment directory is read-only,
-# so only generated state belongs under /tmp.
-RUNTIME_DIR = Path("/tmp/shopmate-ai") if os.getenv("VERCEL") else BASE_DIR
+# read from the project directory. In serverless / container environments (Vercel, Cloud Run),
+# generated state belongs under /tmp.
+RUNTIME_DIR = Path("/tmp/shopmate-ai") if (os.getenv("VERCEL") or os.getenv("K_SERVICE")) else BASE_DIR
 
 class Settings(BaseSettings):
     # Hosted providers sometimes expose an unset environment variable as an
@@ -21,14 +21,25 @@ class Settings(BaseSettings):
     VERSION: str = "1.0.0"
     API_V1_STR: str = "/api"
 
+    # Server & Port for Cloud Run / Container Deployment
+    PORT: int = int(os.getenv("PORT", 8080))
+    HOST: str = os.getenv("HOST", "0.0.0.0")
+    ENVIRONMENT: str = os.getenv("ENVIRONMENT", "development")
+
+    # Production CORS Settings (supports comma-separated list of React / Next.js origins or "*")
+    ALLOWED_ORIGINS: str = os.getenv(
+        "ALLOWED_ORIGINS",
+        "http://localhost:3000,http://localhost:3001,http://127.0.0.1:3000,http://127.0.0.1:3001,*"
+    )
+
     # Environment & Paths
     BASE_DIR: Path = BASE_DIR
     DATA_DIR: Path = BASE_DIR / "data"
     CHROMA_PERSIST_DIR: Path = RUNTIME_DIR / "chroma_db"
 
     # Database (PostgreSQL with SQLite fallback)
-    # A blank Vercel environment variable must not be passed to SQLAlchemy.
-    # The SQLite fallback also needs writable storage when running in a function.
+    # A blank Vercel/Cloud Run environment variable must not be passed to SQLAlchemy.
+    # The SQLite fallback also needs writable storage when running in a function/container.
     DATABASE_URL: str = os.getenv("DATABASE_URL") or f"sqlite:///{RUNTIME_DIR / 'shopmate.db'}"
 
     # Security & JWT

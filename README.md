@@ -83,8 +83,16 @@ cp .env.example .env
 
 ### 3. Run Application Server
 
+#### Local Development:
 ```bash
-uvicorn app.main:app --host 127.0.0.1 --port 8000 --reload
+uvicorn main:app --host 127.0.0.1 --port 8000 --reload
+# Or simply:
+python main.py
+```
+
+#### Production / Google Cloud Run:
+```bash
+uvicorn main:app --host 0.0.0.0 --port $PORT
 ```
 
 Open your browser and navigate to:
@@ -92,6 +100,32 @@ Open your browser and navigate to:
 
 Explore the interactive API Swagger Documentation at:
 👉 **`http://localhost:8000/docs`**
+
+---
+
+## ☁️ Google Cloud Run Deployment
+
+ShopMate AI is fully configured for serverless production deployment on **Google Cloud Run**:
+
+- **Dynamic Port Binding:** Automatically binds to `$PORT` (default `8080`).
+- **Production CORS:** Configured via `ALLOWED_ORIGINS` to support decoupled **React / Next.js** frontends with full credential support.
+- **Secrets Management:** Ready for Google Cloud Secret Manager integration.
+- **Container Build:** Production `Dockerfile` and `.gcloudignore` included.
+
+### Quick Deploy:
+```bash
+# Deploy directly from source
+gcloud run deploy shopmate-ai \
+  --source . \
+  --region us-central1 \
+  --allow-unauthenticated \
+  --memory 2Gi \
+  --cpu 2 \
+  --set-env-vars="ENVIRONMENT=production,ALLOWED_ORIGINS=https://your-react-app.vercel.app,http://localhost:3000" \
+  --set-secrets="SECRET_KEY=SHOPMATE_SECRET_KEY:latest"
+```
+
+> 📖 For comprehensive deployment steps, Secret Manager setup, and Cloud SQL configuration, see [DEPLOYMENT.md](DEPLOYMENT.md).
 
 ---
 
@@ -109,28 +143,34 @@ pytest -v
 
 ```
 Shopmate AI/
+├── main.py                   # Root application entrypoint (Cloud Run & local)
+├── Dockerfile                # Production container specification
+├── .dockerignore             # Docker build exclusion rules
+├── .gcloudignore             # Cloud Build / Cloud Run exclusion rules
+├── DEPLOYMENT.md             # Complete Google Cloud Run deployment guide
+├── Procfile                  # Process file for container/PaaS runners
 ├── app/
-│   ├── config.py                 # Pydantic environment configuration
-│   ├── database.py               # SQLAlchemy database engine and session
-│   ├── seed_data.py              # DB & Vector collections seeder
-│   ├── main.py                   # FastAPI main application
-│   ├── models/                   # Database models (User, Product, Order, Memory, Analytics)
-│   ├── auth/                     # JWT authentication & RBAC dependencies
-│   ├── rag/                      # Embeddings, ChromaDB, Ingestion, Hybrid Search, Reranker
-│   ├── agents/                   # LangGraph Router, Agents, Critic, Tools, Workflow Graph
-│   ├── memory/                   # Short-term and Long-term user preference memory
-│   ├── evaluation/               # Metrics (Precision, Recall, MRR) & Benchmark runner
-│   └── api/                      # Modular REST API routes
+│   ├── config.py             # Pydantic settings (PORT, CORS origins, secrets)
+│   ├── database.py           # SQLAlchemy database engine and session
+│   ├── seed_data.py          # DB & Vector collections seeder
+│   ├── main.py               # FastAPI application & production CORS middleware
+│   ├── models/               # Database models (User, Product, Order, Memory, Analytics)
+│   ├── auth/                 # JWT authentication & RBAC dependencies
+│   ├── rag/                  # Embeddings, ChromaDB, Ingestion, Hybrid Search, Reranker
+│   ├── agents/               # LangGraph Router, Agents, Critic, Tools, Workflow Graph
+│   ├── memory/               # Short-term and Long-term user preference memory
+│   ├── evaluation/           # Metrics (Precision, Recall, MRR) & Benchmark runner
+│   └── api/                  # Modular REST API routes
 ├── data/
-│   ├── products.json             # Retail product catalog dataset
-│   ├── sample_orders.json        # Test orders with tracking telemetry
-│   └── policies/                 # Return, shipping, warranty, and pricing policies
+│   ├── products.json         # Retail product catalog dataset
+│   ├── sample_orders.json    # Test orders with tracking telemetry
+│   └── policies/             # Return, shipping, warranty, and pricing policies
 ├── static/
-│   ├── index.html                # Dark Glassmorphism SPA dashboard
-│   ├── css/style.css             # Glassmorphism design system
-│   └── js/                       # Modular frontend controllers (chat, catalog, rag, analytics)
-├── tests/                        # Automated PyTest test suites
-├── requirements.txt
+│   ├── index.html            # Dark Glassmorphism SPA dashboard
+│   ├── css/style.css         # Glassmorphism design system
+│   └── js/                   # Modular frontend controllers (chat, catalog, rag, analytics)
+├── tests/                    # Automated PyTest test suites
+├── requirements.txt          # Production Python dependencies
 └── README.md
 ```
 
@@ -143,3 +183,4 @@ Shopmate AI/
 | **Admin** | `admin` | `admin123` |
 | **Support** | `support` | `support123` |
 | **Customer** | `sindhu` | `sindhu123` |
+

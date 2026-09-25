@@ -1,0 +1,25 @@
+# Google Cloud Run / Cloud Build ignore file
+.gcloudignore
+.git/
+.gitignore
+.env
+.env.*
+!.env.example
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+.venv/
+.pytest_cache/
+tests/
+*.db
+shopmate.db
+chroma_db/
+.DS_Store
+*.log
+.coverage
+htmlcov/

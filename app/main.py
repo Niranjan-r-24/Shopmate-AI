@@ -38,10 +38,13 @@ app = FastAPI(
     lifespan=lifespan
 )
 
-# CORS middleware for development flexibility
+# CORS middleware configured for production (supporting React / Next.js frontends)
+raw_origins = [o.strip() for o in settings.ALLOWED_ORIGINS.split(",") if o.strip()]
+cors_origins = ["*"] if "*" in raw_origins else raw_origins
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=cors_origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -103,5 +106,7 @@ async def health_check():
     return {
         "status": "healthy",
         "version": settings.VERSION,
-        "project": settings.PROJECT_NAME
+        "project": settings.PROJECT_NAME,
+        "environment": settings.ENVIRONMENT,
+        "port": settings.PORT
     }
